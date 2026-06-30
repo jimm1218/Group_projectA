@@ -1,64 +1,64 @@
-﻿# Implementation Plan
+# 實作計畫
 
-## Objective
+## 目標
 
-Reposition and evolve the project into an Enterprise AI Omnichannel Reputation Management Platform.
+將本專案重新定位並演進為 Enterprise AI Omnichannel Reputation Management Platform。
 
-The platform must support multi-source reputation ingestion, normalize all records into a unified Mention Schema, process mentions through AI pipelines, enforce RAG safety guardrails, and govern whether a response can be officially published or only used internally as a suggested response.
+平台需支援多來源聲譽資料匯入，將所有來源資料標準化為統一 Mention Schema，交由 AI Pipeline 分析，並透過 RAG Guardrails 與 Reply Capability Layer 管理 AI 回覆是否能正式發布，或只能作為內部 Suggested Response。
 
-## Current Baseline
+## 目前基底
 
-The current prototype already includes:
+目前 prototype 已具備：
 
-- A browser-based dashboard in `index.html`.
-- Core logic in `app.js`.
-- Local demo review data.
-- Supabase `review` table integration.
-- Data source selector for local demo data vs Supabase data.
-- Mention Schema adapter for Supabase rows.
-- RAG simulator with generic reply generation.
-- Editable AI reply draft and submission simulation.
-- Reply Capability Layer rules.
-- Documentation files for architecture and schema.
+- 以 `index.html` 為主的前端 Dashboard。
+- 主要邏輯集中於 `app.js`。
+- 本地示範評論資料。
+- Supabase `review` table 整合。
+- 本地資料與 Supabase 資料切換器。
+- Supabase row 到 Mention Schema 的 adapter。
+- 可產生通用回覆草稿的 RAG simulator。
+- 可編輯 AI reply draft 與提交模擬。
+- Reply Capability Layer 規則。
+- 架構與 Schema 文件。
 
-## Phase 1: Data Source Selection
+## Phase 1：資料來源切換
 
-Status: implemented.
+狀態：已完成。
 
-Goals:
+目標：
 
-- Allow the user to choose between local demo data and Supabase data.
-- Preserve local data for offline demos.
-- Load Supabase data only when selected.
-- Re-render charts, mention list, alerts, NLP selector, and RAG selector after switching.
+- 讓使用者可選擇本地示範資料或 Supabase 線上資料。
+- 保留本地資料，方便離線展示與測試。
+- 只有使用者選擇 Supabase 時才讀取線上資料。
+- 切換後重新渲染圖表、Mention list、Alert Center、NLP selector 與 RAG selector。
 
-Key files:
+關鍵檔案：
 
-- `index.html`: `data-source-select`
-- `app.js`: `LOCAL_REVIEWS`, `activeDataSource`, `switchDataSource()`, `setupDataSourceSelector()`
+- `index.html`：`data-source-select`
+- `app.js`：`LOCAL_REVIEWS`、`activeDataSource`、`switchDataSource()`、`setupDataSourceSelector()`
 
-Verification:
+驗證方式：
 
-- Default page load shows local demo data.
-- Selecting Supabase loads `review` rows from Supabase.
-- Refresh respects the active data source.
+- 預設載入本地示範資料。
+- 選擇 Supabase 後載入 `review` table。
+- 重整資料時會依照目前資料來源重新載入。
 
-## Phase 2: Unified Mention Schema
+## Phase 2：統一 Mention Schema
 
-Status: implemented as frontend adapter.
+狀態：已在前端 adapter 實作。
 
-Goals:
+目標：
 
-- Treat Supabase `review` rows as source records.
-- Convert source records into a unified Mention Schema before AI processing.
-- Preserve raw source payload for audit and future backend processing.
+- 將 Supabase `review` row 視為來源資料。
+- 來源資料必須先轉換成統一 Mention Schema，才進入 AI 流程。
+- 保留 raw source payload，以便未來稽核與後端處理。
 
-Current adapter:
+目前 adapter：
 
 - `mapSupabaseRowToMention(row)`
 - `mapSupabaseReview(row)`
 
-Target schema fields:
+目標 Schema 欄位：
 
 - `mention_id`
 - `tenant_id`
@@ -78,70 +78,70 @@ Target schema fields:
 - `reply_capability`
 - `ai_reply_output`
 
-Reference:
+參考文件：
 
 - `mention_schema.md`
 
-## Phase 3: Reply Capability Layer
+## Phase 3：Reply Capability Layer
 
-Status: implemented in prototype logic.
+狀態：已在 prototype 邏輯中實作。
 
-Rules:
+規則：
 
-Google Business Reviews:
+Google Business Reviews：
 
-- Generate AI reply draft.
-- Require manager approval.
-- Future backend may publish approved replies via Google Business API.
+- 可產生 AI reply draft。
+- 必須經過 Manager Approval。
+- 未來後端可在核准後透過 Google Business API 發布。
 
-Other sources:
+其他來源：
 
-- Generate suggested response only.
-- Do not publish through platform APIs.
-- Allow CRM ticket creation.
-- Allow department notification.
+- 只能產生 Suggested Response。
+- 不可透過平台 API 發布留言。
+- 可建立 CRM Ticket。
+- 可通知部門。
 
-Current implementation:
+目前實作：
 
 - `REPLY_CAPABILITY_LAYER`
 - `getReplyCapability(source)`
 - `submitAiReplyDraft()`
 - `createCrmTicketFromDraft()`
 
-Next backend work:
+下一步後端工作：
 
-- Persist reply decisions.
-- Persist approval requests.
-- Persist CRM tickets.
-- Add audit logs.
-- Add actual Google Business API publishing only after approval.
+- 持久化 reply decisions。
+- 持久化 approval requests。
+- 持久化 CRM tickets。
+- 增加 audit logs。
+- 僅在核准後才允許 Google Business API 發布。
 
-## Phase 4: RAG Guardrails And AI Reply Engine
+## Phase 4：RAG Guardrails 與 AI Reply Engine
 
-Status: prototype implemented.
+狀態：prototype 已完成。
 
-Current behavior:
+目前行為：
 
-- Uses predefined `RAG_RESPONSES` for legacy local cases when available.
-- Uses generic RAG rule inference for all other mentions.
-- Generates a safe reply draft.
-- Displays JSON output with required AI decision fields.
-- Allows manager editing before submission.
+- 若本地 legacy case 有預先寫好的 `RAG_RESPONSES`，則使用預設劇本。
+- 其他 Mention 使用通用 RAG rule inference。
+- 產生安全回覆草稿。
+- 顯示包含 AI decision fields 的 JSON output。
+- 允許 Manager 編輯草稿後提交。
 
-Guardrails:
+Guardrails：
 
-- No admission of liability.
-- No refund promise.
-- No compensation promise.
-- No fabricated policy.
-- No fabricated promotion.
-- No fabricated store information.
-- No fabricated business hours.
-- No fabricated phone number.
-- No fabricated product information.
-- No speculation about unverified events.
+- 不承認責任。
+- 不承諾退款。
+- 不承諾賠償。
+- 不編造政策。
+- 不編造優惠。
+- 不編造門市資訊。
+- 不編造營業時間。
+- 不編造電話。
+- 不編造產品資訊。
+- 不推測未確認事件。
 
-Current implementation:
+目前實作：
 
 - `RAG_REPLY_GUARDRAILS`
 - `inferMatchedRagRules(review)`
@@ -149,19 +149,19 @@ Current implementation:
 - `buildGenericRagData(review)`
 - `runRAGSimulation()`
 
-Next backend work:
+下一步後端工作：
 
-- Replace heuristic retrieval with vector retrieval.
-- Store KB entries in tenant-scoped tables.
-- Add reply validation service.
-- Add structured output validation.
-- Add model call layer through backend, not directly from browser.
+- 用 vector retrieval 取代 heuristic retrieval。
+- 將 KB entries 存入 tenant-scoped tables。
+- 增加 reply validation service。
+- 增加 structured output validation。
+- 將模型呼叫移至後端，不直接放在瀏覽器。
 
-## Phase 5: Dashboard Evolution
+## Phase 5：Dashboard 演進
 
-Current UI is still adapted from the legacy Google Review dashboard.
+目前 UI 仍有一部分繼承自 legacy Google Review dashboard。
 
-Target modules:
+目標模組：
 
 - Multi-source Reputation Dashboard
 - AI Decision Center
@@ -172,31 +172,31 @@ Target modules:
 - Competitor Comparison
 - AI Suggested Actions
 
-Recommended next UI tasks:
+建議下一批 UI 任務：
 
-1. Rename `reviews` tab to `Mentions`.
-2. Add source filter and publish-capability filter.
-3. Add AI Decision Center table with risk, confidence, department, allowed actions, blocked actions.
-4. Add Escalation Center for legal, PR, customer service, operations, and store manager queues.
-5. Add Mention Timeline by source and risk level.
-6. Add Crisis Monitoring panel for negative spikes and high-risk keyword clusters.
-7. Add Brand Health Score based on sentiment, risk, velocity, and unresolved escalations.
+1. 將 `reviews` tab 改名為 `Mentions`。
+2. 增加 source filter 與 publish-capability filter。
+3. 新增 AI Decision Center table，顯示 risk、confidence、department、allowed actions、blocked actions。
+4. 新增 Escalation Center，支援 legal、PR、customer service、operations、store manager queue。
+5. 新增 Mention Timeline，依來源與風險等級顯示趨勢。
+6. 新增 Crisis Monitoring panel，追蹤負評暴增與高風險關鍵字群。
+7. 新增 Brand Health Score，整合 sentiment、risk、velocity、unresolved escalations。
 
-## Phase 6: Enterprise SaaS Backend
+## Phase 6：Enterprise SaaS 後端
 
-Target production architecture:
+目標 production architecture：
 
-- FastAPI for API layer.
-- PostgreSQL / Supabase for transactional storage.
-- Redis for cache, queues, and locks.
-- Celery for async ingestion and AI jobs.
-- Vector database or pgvector for RAG retrieval.
-- Object storage for raw payloads, CSV files, screenshots, and media.
-- n8n for workflow automation.
-- MCP for controlled enterprise tool integrations.
-- Multi-tenant authorization and audit logging.
+- FastAPI 作為 API layer。
+- PostgreSQL / Supabase 作為交易資料庫。
+- Redis 作為 cache、queue、lock。
+- Celery 處理 async ingestion 與 AI jobs。
+- Vector database 或 pgvector 處理 RAG retrieval。
+- Object storage 保存 raw payload、CSV、screenshot、media。
+- n8n 處理 workflow automation。
+- MCP 處理受控企業工具整合。
+- Multi-tenant authorization 與 audit logging。
 
-Recommended tables:
+建議資料表：
 
 - `tenant`
 - `client`
@@ -211,31 +211,31 @@ Recommended tables:
 - `policy_rule`
 - `audit_log`
 
-## Phase 7: Verification Plan
+## Phase 7：驗證計畫
 
-Frontend checks:
+前端檢查：
 
 - `node --check app.js`
-- Page loads at `http://127.0.0.1:8000/index.html`.
-- Local demo data is selected by default.
-- Supabase data source can be selected.
-- Mention list and charts update after data source switch.
-- AI RAG simulator works for local data.
-- AI RAG simulator works for Supabase data.
-- Final reply draft is editable.
-- Submit action routes Google-like sources to manager approval.
-- Non-Google sources route to CRM/suggested-response handling.
+- 頁面可在 `http://127.0.0.1:8000/index.html` 開啟。
+- 預設為本地示範資料。
+- 可切換至 Supabase 資料來源。
+- 切換後 Mention list 與圖表會更新。
+- AI RAG simulator 可處理本地資料。
+- AI RAG simulator 可處理 Supabase 資料。
+- Final reply draft 可編輯。
+- Google 類來源 submit 後進入 manager approval。
+- 非 Google 來源 submit 後進入 CRM / Suggested Response 流程。
 
-Supabase checks:
+Supabase 檢查：
 
-- Publishable key can read `review`.
-- RLS policy allows intended anonymous read only.
-- No `service_role` key is exposed in frontend code.
+- Publishable key 可讀取 `review`。
+- RLS policy 僅允許預期的匿名讀取。
+- 前端不可暴露 `service_role` key。
 
-## Open Decisions
+## 尚待決策
 
-- Whether to keep Supabase direct-from-browser for demo only or move all Supabase reads behind FastAPI.
-- Which vector store to use for production RAG retrieval.
-- Whether Google Business API publishing should be a direct backend action or an n8n workflow.
-- How tenant identity will be resolved in the first production version.
-- Which source connectors should be built first after Google and Supabase.
+- Supabase 是否只作為 demo direct-from-browser，或正式版全部改由 FastAPI 代理。
+- Production RAG retrieval 要採用哪一種 vector store。
+- Google Business API 發布要由後端直接執行，還是交由 n8n workflow。
+- 第一版 production 的 tenant identity 如何解析。
+- Google 與 Supabase 之後，優先開發哪個 source connector。
