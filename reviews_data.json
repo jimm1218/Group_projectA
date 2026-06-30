@@ -1,0 +1,721 @@
+[
+  {
+    "review_id": "r001",
+    "store_name": "美味花園 信義店",
+    "reviewer": "林小明",
+    "rating": 5,
+    "raw_text": "招牌烤雞真的太好吃了！外皮烤得酥脆，咬下去肉汁飽滿。店員服務態度非常親切主動，用餐環境很乾淨明亮，非常適合家族聚餐，極力推薦！",
+    "review_time": "2026-06-01 12:30:00",
+    "sentiment": { "label": "positive", "score": 0.95 },
+    "emotion": { "joy": 0.90, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.95 },
+      { "topic": "service", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "招牌烤雞真的太好吃了" },
+      { "aspect": "service", "sentiment": "positive", "evidence": "店員服務態度非常親切主動" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.98
+  },
+  {
+    "review_id": "r002",
+    "store_name": "美味花園 中山店",
+    "reviewer": "陳雅婷",
+    "rating": 5,
+    "raw_text": "環境氣氛非常優雅，裝潢很有質感。下午茶的抹茶鬆餅甜而不膩，抹茶味很濃郁！服務人員也很貼心，會主動倒水，下次還會想跟朋友聚會來這。",
+    "review_time": "2026-06-02 15:45:00",
+    "sentiment": { "label": "positive", "score": 0.92 },
+    "emotion": { "joy": 0.85, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "environment", "score": 0.95 },
+      { "topic": "food", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "environment", "sentiment": "positive", "evidence": "環境氣氛非常優雅" },
+      { "aspect": "food", "sentiment": "positive", "evidence": "抹茶鬆餅甜而不膩" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.96
+  },
+  {
+    "review_id": "r003",
+    "store_name": "美味花園 公館店",
+    "reviewer": "張立宏",
+    "rating": 4,
+    "raw_text": "奶油海鮮義大利麵的蝦子很新鮮，麵條軟硬適中，起司香氣很足。唯獨假日人潮多的時候店內稍微嘈雜了一點，講話要比較用力，但整體餐點還是很有水縱。",
+    "review_time": "2026-06-03 18:20:00",
+    "sentiment": { "label": "positive", "score": 0.75 },
+    "emotion": { "joy": 0.70, "anger": 0.0, "disappointment": 0.20 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.85 },
+      { "topic": "environment", "score": 0.60 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "蝦子很新鮮，麵條軟硬適中" },
+      { "aspect": "environment", "sentiment": "negative", "evidence": "店內稍微嘈雜了一點" }
+    ],
+    "risk": { "score": 15, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.92
+  },
+  {
+    "review_id": "r004",
+    "store_name": "美味花園 信義店",
+    "reviewer": "David Chen",
+    "rating": 3,
+    "raw_text": "東西是蠻好吃的，但是沒有預約的話，現場排隊排了快要一個半小時，實在等太久了。建議店家應該改善排隊流程，或者增加線上訂位的名額。",
+    "review_time": "2026-06-04 19:10:00",
+    "sentiment": { "label": "neutral", "score": 0.10 },
+    "emotion": { "joy": 0.30, "anger": 0.30, "disappointment": 0.50 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.80 },
+      { "topic": "food", "score": 0.70 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "東西是蠻好吃的" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "現場排隊排了快要一個半小時，實在等太久" }
+    ],
+    "risk": { "score": 25, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.95
+  },
+  {
+    "review_id": "r005",
+    "store_name": "美味花園 公館店",
+    "reviewer": "李佩真",
+    "rating": 1,
+    "raw_text": "今天點了番茄牛肉湯，喝到一半竟然發現湯裡有一根黑色的長頭髮！超級噁心！叫店員過來反應，竟然只是冷冷地說「幫你換一碗」，一點誠意都沒有，直接氣到沒胃口，絕對不會再去！食安管理太差勁了！",
+    "review_time": "2026-06-05 13:15:00",
+    "sentiment": { "label": "negative", "score": -0.90 },
+    "emotion": { "joy": 0.0, "anger": 0.95, "disappointment": 0.80 },
+    "intent": { "primary": "complaint", "secondary": ["refund_request"] },
+    "topics": [
+      { "topic": "food", "score": 0.90 },
+      { "topic": "service", "score": 0.85 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "湯裡有一根黑色的長頭髮" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "店員冷冷地說「幫你換一碗」，一點誠意都沒有" }
+    ],
+    "risk": { "score": 75, "level": "high", "legal_risk": false, "food_safety": true, "hygiene_risk": true, "escalation_type": "manager_review" },
+    "confidence": 0.97
+  },
+  {
+    "review_id": "r006",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "王健宇",
+    "rating": 1,
+    "raw_text": "昨天跟朋友在這聚餐點了海鮮拼盤，回去之後我們兩個人都肚子痛、拉肚子了一整晚！懷疑是生蠔或蝦子不新鮮。這根本是重大的食品安全問題，希望能給個合理的解釋，否則不排除投訴衛生局！",
+    "review_time": "2026-06-06 10:00:00",
+    "sentiment": { "label": "negative", "score": -0.98 },
+    "emotion": { "joy": 0.0, "anger": 0.98, "disappointment": 0.90 },
+    "intent": { "primary": "complaint", "secondary": ["refund_request"] },
+    "topics": [
+      { "topic": "food", "score": 0.98 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "兩個人都肚子痛、拉肚子了一整晚！懷疑是生蠔或蝦子不新鮮" }
+    ],
+    "risk": { "score": 95, "level": "critical", "legal_risk": true, "food_safety": true, "hygiene_risk": true, "escalation_type": "legal_review" },
+    "confidence": 0.99
+  },
+  {
+    "review_id": "r007",
+    "store_name": "美味花園 中山店",
+    "reviewer": "劉芳妤",
+    "rating": 2,
+    "raw_text": "餐點還可以，但是服務生態度非常傲慢。問問題愛理不理的，點餐時甚至直接對我們翻白眼，送餐也是用摔的。最後收了 10% 服務費，這種服務態度到底憑什麼收服務費？完全不值得！",
+    "review_time": "2026-06-07 20:30:00",
+    "sentiment": { "label": "negative", "score": -0.78 },
+    "emotion": { "joy": 0.0, "anger": 0.85, "disappointment": 0.75 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.95 },
+      { "topic": "food", "score": 0.50 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "negative", "evidence": "服務生態度非常傲慢。點餐時甚至對我們翻白眼" }
+    ],
+    "risk": { "score": 45, "level": "medium", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "customer_service" },
+    "confidence": 0.96
+  },
+  {
+    "review_id": "r008",
+    "store_name": "美味花園 高雄巨蛋店",
+    "reviewer": "黃瑞奇",
+    "rating": 1,
+    "raw_text": "在吃小火鍋的時候，突然看到高麗菜葉底下有一隻活生生的小蟑螂在爬！差點沒嚇死！跟店家反映之後，只幫我免單那一鍋，但我們整桌都已經反胃吃不下了。餐廳的清潔衛生實在太可怕了，衛生堪憂！",
+    "review_time": "2026-06-08 19:40:00",
+    "sentiment": { "label": "negative", "score": -0.95 },
+    "emotion": { "joy": 0.0, "anger": 0.95, "disappointment": 0.85 },
+    "intent": { "primary": "complaint", "secondary": ["refund_request"] },
+    "topics": [
+      { "topic": "food", "score": 0.95 },
+      { "topic": "environment", "score": 0.85 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "高麗菜葉底下有一隻活生生的小蟑螂在爬" },
+      { "aspect": "environment", "sentiment": "negative", "evidence": "餐廳的清潔衛生實在太可怕了" }
+    ],
+    "risk": { "score": 90, "level": "critical", "legal_risk": false, "food_safety": true, "hygiene_risk": true, "escalation_type": "manager_review" },
+    "confidence": 0.98
+  },
+  {
+    "review_id": "r009",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "吳美玲",
+    "rating": 4,
+    "raw_text": "炭烤牛排熟度剛剛好，肉質香嫩。環境佈置得很典雅，服務生也算客氣。不過價格確實稍微高了一點，份量對男生來說可能不太夠，算是精緻路線的餐廳。",
+    "review_time": "2026-06-09 13:00:00",
+    "sentiment": { "label": "positive", "score": 0.65 },
+    "emotion": { "joy": 0.75, "anger": 0.0, "disappointment": 0.30 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.85 },
+      { "topic": "environment", "score": 0.80 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "炭烤牛排熟度剛剛好，肉質香嫩" }
+    ],
+    "risk": { "score": 10, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.94
+  },
+  {
+    "review_id": "r010",
+    "store_name": "美味花園 公館店",
+    "reviewer": "蔡家豪",
+    "rating": 2,
+    "raw_text": "一進去就覺得桌子油油黏黏的沒有擦乾淨，地板也有很多掉落的食物碎屑。跟店員反應後，拿抹布來隨便抹了兩下還是黏。雖然餐點味道算及格，但這種環境衛生水準讓人用餐很不安心。",
+    "review_time": "2026-06-10 12:15:00",
+    "sentiment": { "label": "negative", "score": -0.65 },
+    "emotion": { "joy": 0.0, "anger": 0.50, "disappointment": 0.70 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "environment", "score": 0.90 },
+      { "topic": "food", "score": 0.50 }
+    ],
+    "aspects": [
+      { "aspect": "environment", "sentiment": "negative", "evidence": "桌子油油黏黏的沒有擦乾淨，地板也有很多掉落的食物碎屑" }
+    ],
+    "risk": { "score": 40, "level": "medium", "legal_risk": false, "food_safety": false, "hygiene_risk": true, "escalation_type": "customer_service" },
+    "confidence": 0.95
+  },
+  {
+    "review_id": "r011",
+    "store_name": "美味花園 信義店",
+    "reviewer": "Sophia Lin",
+    "rating": 3,
+    "raw_text": "今天去用餐，點了牛肉漢堡，結果咬開中間的牛肉竟然是血紅的生肉，完全沒熟！希望收銀流程和客服教育能再加強，整體食物是不錯。",
+    "review_time": "2026-06-11 21:00:00",
+    "sentiment": { "label": "neutral", "score": -0.15 },
+    "emotion": { "joy": 0.10, "anger": 0.40, "disappointment": 0.60 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.85 },
+      { "topic": "food", "score": 0.60 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "negative", "evidence": "櫃檯把我們的單子跟隔壁桌算錯了...退款但櫃檯人員態度很不耐煩" },
+      { "aspect": "food", "sentiment": "positive", "evidence": "食物是不錯" }
+    ],
+    "risk": { "score": 30, "level": "medium", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "customer_service" },
+    "confidence": 0.93
+  },
+  {
+    "review_id": "r012",
+    "store_name": "美味花園 中山店",
+    "reviewer": "高小凡",
+    "rating": 5,
+    "raw_text": "這是我吃過最好吃的經典凱薩沙拉！蔬菜極度爽脆，醬汁比例很完美。而且店裡還提供免費的插座和流暢的 Wi-Fi，服務生看到我水杯快空了都會主動補滿，簡直是辦公和聚會的最佳地點！",
+    "review_time": "2026-06-12 14:20:00",
+    "sentiment": { "label": "positive", "score": 0.96 },
+    "emotion": { "joy": 0.95, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.95 },
+      { "topic": "service", "score": 0.90 },
+      { "topic": "environment", "score": 0.85 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "經典凱薩沙拉！蔬菜極度爽脆" },
+      { "aspect": "service", "sentiment": "positive", "evidence": "水杯快空了都會主動補滿" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.97
+  },
+  {
+    "review_id": "r013",
+    "store_name": "美味花園 高雄巨蛋店",
+    "reviewer": "陳冠宇",
+    "rating": 3,
+    "raw_text": "點了蒜香松阪豬飯，豬肉有點硬，稍微咬不動，調味倒還可以。不過巨蛋店的位置很方便，捷運站出來走一下就到了，座位也很寬敞，如果餐點品質能更穩定就好了。",
+    "review_time": "2026-06-13 12:40:00",
+    "sentiment": { "label": "neutral", "score": 0.20 },
+    "emotion": { "joy": 0.40, "anger": 0.10, "disappointment": 0.30 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.70 },
+      { "topic": "environment", "score": 0.80 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "豬肉有點硬，稍微咬不動" },
+      { "aspect": "environment", "sentiment": "positive", "evidence": "捷運站出來走一下就到了，座位也很寬敞" }
+    ],
+    "risk": { "score": 15, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.91
+  },
+  {
+    "review_id": "r014",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "徐志強",
+    "rating": 1,
+    "raw_text": "真的太令人生氣了！一盤要 400 元的義大利麵，送上來的時候竟然是溫的，甚至有點冷掉。跟女店員反應，她居然回「我們店出餐就是這個溫度」，隨便敷衍完就走了，服務態度爛到爆，這種品質和服務收這種價格，坑人吧！",
+    "review_time": "2026-06-14 19:25:00",
+    "sentiment": { "label": "negative", "score": -0.88 },
+    "emotion": { "joy": 0.0, "anger": 0.92, "disappointment": 0.85 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.80 },
+      { "topic": "service", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "義大利麵，送上來的時候竟然是溫的，甚至有點冷掉" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "店員回「我們店出餐就是這個溫度」，隨便敷衍完就走了" }
+    ],
+    "risk": { "score": 50, "level": "medium", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "customer_service" },
+    "confidence": 0.96
+  },
+  {
+    "review_id": "r015",
+    "store_name": "美味花園 信義店",
+    "reviewer": "許雅婷",
+    "rating": 2,
+    "raw_text": "今天去用餐，點了牛肉漢堡，結果咬開中間的牛肉竟然是血紅的生肉，完全沒熟！打電話請經理處理，拿回去重烤也是一副不甘願的樣子。如果是老人或小孩吃下去怎麼辦？食安管控也太誇張了吧，根本罔顧人命！",
+    "review_time": "2026-06-15 18:30:00",
+    "sentiment": { "label": "negative", "score": -0.92 },
+    "emotion": { "joy": 0.0, "anger": 0.95, "disappointment": 0.85 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.95 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "牛肉漢堡，結果咬開中間的牛肉竟然是血紅的生肉，完全沒熟" }
+    ],
+    "risk": { "score": 85, "level": "high", "legal_risk": false, "food_safety": true, "hygiene_risk": false, "escalation_type": "manager_review" },
+    "confidence": 0.97
+  },
+  {
+    "review_id": "r016",
+    "store_name": "美味花園 公館店",
+    "reviewer": "詹智鈞",
+    "rating": 4,
+    "raw_text": "餐點非常好吃，松露野菇燉飯香氣逼人，起司味道很融洽。只是門市的排隊等候動線有點混亂，現場候位擠成一團，差點跟其他顧客發生口角衝突，希望能劃定更明確的排隊區。",
+    "review_time": "2026-06-16 19:00:00",
+    "sentiment": { "label": "positive", "score": 0.68 },
+    "emotion": { "joy": 0.70, "anger": 0.15, "disappointment": 0.35 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.90 },
+      { "topic": "service", "score": 0.65 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "松露野菇燉飯香氣逼人，起司味道很融洽" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "排隊等候動線有點混混亂，現場候位擠成一團" }
+    ],
+    "risk": { "score": 20, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.94
+  },
+  {
+    "review_id": "r017",
+    "store_name": "美味花園 中山店",
+    "reviewer": "Emily Wu",
+    "rating": 5,
+    "raw_text": "第一次帶狗狗來這家寵物友善餐廳，店員對寵物非常友善，還貼心提供了寵物專用的水碗，服務超級加分！我們點的明太子意麵和酥炸薯條也非常好吃，環境乾淨沒有寵物異味，大推！",
+    "review_time": "2026-06-17 11:50:00",
+    "sentiment": { "label": "positive", "score": 0.98 },
+    "emotion": { "joy": 0.98, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.98 },
+      { "topic": "food", "score": 0.92 },
+      { "topic": "environment", "score": 0.95 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "positive", "evidence": "店員對寵物非常友善，還貼心提供了寵物專用的水碗" },
+      { "aspect": "food", "sentiment": "positive", "evidence": "明太子意麵和酥炸薯條也非常好吃" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.98
+  },
+  {
+    "review_id": "r018",
+    "store_name": "美味花園 高雄巨蛋店",
+    "reviewer": "李建德",
+    "rating": 1,
+    "raw_text": "非常不推！今天結帳發現，他們竟然偷偷多刷了兩筆我們沒有點的開胃菜。跟收銀員理論，她竟然還指責是我們記錯，最後調出點單紀錄發現真的是他們系統出錯，才退錢給我們。誠信有問題！",
+    "review_time": "2026-06-18 20:10:00",
+    "sentiment": { "label": "negative", "score": -0.96 },
+    "emotion": { "joy": 0.0, "anger": 0.98, "disappointment": 0.90 },
+    "intent": { "primary": "complaint", "secondary": ["refund_request"] },
+    "topics": [
+      { "topic": "service", "score": 0.95 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "negative", "evidence": "偷偷多刷了兩筆我們沒有點的開胃菜...還指責是我們記錯，誠信有問題" }
+    ],
+    "risk": { "score": 80, "level": "high", "legal_risk": true, "food_safety": false, "hygiene_risk": false, "escalation_type": "legal_review" },
+    "confidence": 0.97
+  },
+  {
+    "review_id": "r019",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "張莉婷",
+    "rating": 5,
+    "raw_text": "今天點了青醬雞肉燉飯，青醬香氣超濃郁，雞肉也很多汁不柴。這裡的上菜速度很快，點餐到上菜不到 10 分鐘，服務效率極高，非常滿意！",
+    "review_time": "2026-06-19 13:10:00",
+    "sentiment": { "label": "positive", "score": 0.94 },
+    "emotion": { "joy": 0.92, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.95 },
+      { "topic": "service", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "青醬雞肉燉飯，青醬香氣超濃郁，雞肉也很多汁" },
+      { "aspect": "service", "sentiment": "positive", "evidence": "上菜速度很快，點餐到上菜不到 10 分鐘" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.96
+  },
+  {
+    "review_id": "r020",
+    "store_name": "美味花園 公館店",
+    "reviewer": "鄭大為",
+    "rating": 2,
+    "raw_text": "點了主廚特製海鮮意麵，結果裡面的蛤蜊全部都沒開，有的甚至還有一股臭味，顯然食材很不新鮮。跟值班店員說，他也只是點頭把盤子端走，也沒有再做任何後續的退費或換餐說明，非常不推薦！",
+    "review_time": "2026-06-20 18:50:00",
+    "sentiment": { "label": "negative", "score": -0.85 },
+    "emotion": { "joy": 0.0, "anger": 0.90, "disappointment": 0.85 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.90 },
+      { "topic": "service", "score": 0.80 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "蛤蜊全部都沒開，有的甚至還有一股臭味，食材很不新鮮" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "店員也只是點頭把盤子端走，也沒有再做任何後續說明" }
+    ],
+    "risk": { "score": 78, "level": "high", "legal_risk": false, "food_safety": true, "hygiene_risk": true, "escalation_type": "manager_review" },
+    "confidence": 0.97
+  },
+  {
+    "review_id": "r021",
+    "store_name": "美味花園 信義店",
+    "reviewer": "王若冰",
+    "rating": 4,
+    "raw_text": "每次來信義店都會點舒芙蕾鬆餅，口感非常綿密像雲朵一樣！不過這家店限時 90 分鐘，時間快到時店員會一直來提醒結帳，感覺稍微有點催促和壓力。如果能稍微放寬到 120 分鐘就更完美了。",
+    "review_time": "2026-06-21 15:00:00",
+    "sentiment": { "label": "positive", "score": 0.70 },
+    "emotion": { "joy": 0.78, "anger": 0.10, "disappointment": 0.30 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.90 },
+      { "topic": "service", "score": 0.60 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "舒芙蕾鬆餅，口感非常綿密像雲朵一樣" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "時間快到時店員會一直來提醒結帳，感覺稍微有點催促和壓力" }
+    ],
+    "risk": { "score": 15, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.94
+  },
+  {
+    "review_id": "r022",
+    "store_name": "美味花園 中山店",
+    "reviewer": "林立群",
+    "rating": 1,
+    "raw_text": "這間店衛生真的很差！剛入座就在我的盤子邊緣看到一個黑乎乎的像是大蒼蠅死掉的屍體！超誇張！服務人員道歉敷衍，而且整個廁所充滿尿騷味，洗手槽根本沒水，環境令人擔憂！",
+    "review_time": "2026-06-22 13:30:00",
+    "sentiment": { "label": "negative", "score": -0.96 },
+    "emotion": { "joy": 0.0, "anger": 0.96, "disappointment": 0.90 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "environment", "score": 0.95 },
+      { "topic": "food", "score": 0.70 }
+    ],
+    "aspects": [
+      { "aspect": "environment", "sentiment": "negative", "evidence": "廁所充滿尿騷味，洗手槽根本沒水，衛生安全差" },
+      { "aspect": "food", "sentiment": "negative", "evidence": "盤子邊緣看到一個黑乎乎的像是大蒼蠅死掉的屍體" }
+    ],
+    "risk": { "score": 88, "level": "high", "legal_risk": false, "food_safety": true, "hygiene_risk": true, "escalation_type": "manager_review" },
+    "confidence": 0.98
+  },
+  {
+    "review_id": "r023",
+    "store_name": "美味花園 高雄巨蛋店",
+    "reviewer": "謝宇航",
+    "rating": 4,
+    "raw_text": "今天品嚐了香蒜蛤蜊細麵，蛤蜊顆顆飽滿而且吐沙乾淨，大蒜和九層塔香氣爆棚。雖然店裡收服務費，但水杯快空了都要自己走去後面倒水，服務生忙著聊天，食物真的好吃。",
+    "review_time": "2026-06-23 19:15:00",
+    "sentiment": { "label": "positive", "score": 0.72 },
+    "emotion": { "joy": 0.75, "anger": 0.10, "disappointment": 0.35 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.95 },
+      { "topic": "service", "score": 0.55 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "香蒜蛤蜊細麵，蛤蜊顆顆飽滿而且吐沙乾淨" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "水杯快空了都要自己走去倒水，服務生忙著聊天" }
+    ],
+    "risk": { "score": 20, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.93
+  },
+  {
+    "review_id": "r024",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "林家豪",
+    "rating": 3,
+    "raw_text": "聽說這家舒芙蕾很有名，特地來吃。舒芙蕾確實口感很棉，但我們點的義大利燉飯卻非常一般，米芯太硬了，CP值一般般。",
+    "review_time": "2026-06-24 14:10:00",
+    "sentiment": { "label": "neutral", "score": 0.15 },
+    "emotion": { "joy": 0.45, "anger": 0.0, "disappointment": 0.35 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.85 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "義大利燉飯非常一般，米芯太硬了，CP值一般" }
+    ],
+    "risk": { "score": 10, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.92
+  },
+  {
+    "review_id": "r025",
+    "store_name": "美味花園 信義店",
+    "reviewer": "劉美芳",
+    "rating": 5,
+    "raw_text": "今天帶著兩歲的小孩去吃，店員主動幫我們換兒童椅和兒童餐具，而且態度超級親切，還送了小孩一塊畫畫板。餐點的番茄肉醬麵小孩非常喜歡吃，暖心服務真的想給十顆星！",
+    "review_time": "2026-06-25 12:00:00",
+    "sentiment": { "label": "positive", "score": 0.99 },
+    "emotion": { "joy": 0.99, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.99 },
+      { "topic": "food", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "positive", "evidence": "店員主動幫我們換兒童椅和兒童餐具，而且態度超級親切" }
+    ],
+    "risk": { "score": 0, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.99
+  },
+  {
+    "review_id": "r026",
+    "store_name": "美味花園 公館店",
+    "reviewer": "何冠達",
+    "rating": 1,
+    "raw_text": "這是我遇過最糟糕的用餐體驗。因為排隊的關係我們跟旁邊的人有點爭執，跟店員反映請他們協調排隊順序，店長過來直接要我們「如果不想排可以去吃別家」，一星都不想給！",
+    "review_time": "2026-06-26 19:40:00",
+    "sentiment": { "label": "negative", "score": -0.92 },
+    "emotion": { "joy": 0.0, "anger": 0.95, "disappointment": 0.85 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.98 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "negative", "evidence": "店長過來直接要我們「如果不想排可以去吃別家」" }
+    ],
+    "risk": { "score": 55, "level": "medium", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "customer_service" },
+    "confidence": 0.96
+  },
+  {
+    "review_id": "r027",
+    "store_name": "美味花園 中山店",
+    "reviewer": "簡淑芬",
+    "rating": 5,
+    "raw_text": "店內的採光非常好，綠植裝飾顯得很清新。今天跟閨蜜一起點了明太子干貝義大利麵，干貝好大顆而且煎得外焦內嫩，調味剛剛好。是會想要無限回訪的口袋名單！",
+    "review_time": "2026-06-27 12:45:00",
+    "sentiment": { "label": "positive", "score": 0.96 },
+    "emotion": { "joy": 0.95, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "environment", "score": 0.92 },
+      { "topic": "food", "score": 0.95 }
+    ],
+    "aspects": [
+      { "aspect": "environment", "sentiment": "positive", "evidence": "店內的採光非常好，綠植裝飾顯得很清新" },
+      { "aspect": "food", "sentiment": "positive", "evidence": "干貝好大顆而且煎得外焦內嫩" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.97
+  },
+  {
+    "review_id": "r028",
+    "store_name": "美味花園 高雄巨蛋店",
+    "reviewer": "盧宣羽",
+    "rating": 2,
+    "raw_text": "松露脆薯很好吃，但除了脆薯以外，主餐等了快要 50 分鐘都還沒上齊。跟店員催了兩次都說在做了，最後送上來發現隔壁比我們晚來的客人都吃完了。管理有極大問題。",
+    "review_time": "2026-06-28 18:30:00",
+    "sentiment": { "label": "negative", "score": -0.60 },
+    "emotion": { "joy": 0.20, "anger": 0.60, "disappointment": 0.70 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.90 },
+      { "topic": "food", "score": 0.60 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "negative", "evidence": "主餐等了快要 50 分鐘都還沒上齊...隔壁比我們晚來的客人都吃完了" }
+    ],
+    "risk": { "score": 35, "level": "medium", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "customer_service" },
+    "confidence": 0.94
+  },
+  {
+    "review_id": "r029",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "蔡佩珊",
+    "rating": 1,
+    "raw_text": "今天點了冰滴咖啡和三明治，喝完咖啡不久我們全家肚子就不太舒服。特別是我兒子，回家後一直拉肚子甚至開始發燒！我們強烈懷疑咖啡冰塊衛生問題，非常不負責！",
+    "review_time": "2026-06-29 16:20:00",
+    "sentiment": { "label": "negative", "score": -0.97 },
+    "emotion": { "joy": 0.0, "anger": 0.96, "disappointment": 0.92 },
+    "intent": { "primary": "complaint", "secondary": ["refund_request"] },
+    "topics": [
+      { "topic": "food", "score": 0.95 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "喝完咖啡不久我們全家肚子就不太舒服...一直拉肚子甚至開始發燒！懷疑冰塊有衛生問題" }
+    ],
+    "risk": { "score": 96, "level": "critical", "legal_risk": true, "food_safety": true, "hygiene_risk": true, "escalation_type": "legal_review" },
+    "confidence": 0.99
+  },
+  {
+    "review_id": "r030",
+    "store_name": "美味花園 信義店",
+    "reviewer": "潘志榮",
+    "rating": 4,
+    "raw_text": "商業午餐的 CP 值蠻高的，主餐加湯和飲料只要 350 元。燉牛肉很嫩，味道也很入味。唯一美中不足的是中午時段客人超多，上菜稍微慢了些，如果不趕時間的話很推薦。",
+    "review_time": "2026-06-30 12:40:00",
+    "sentiment": { "label": "positive", "score": 0.78 },
+    "emotion": { "joy": 0.80, "anger": 0.0, "disappointment": 0.25 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.88 },
+      { "topic": "service", "score": 0.65 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "商業午餐的 CP 值蠻高的，燉牛肉很嫩" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "中午時段客人超多，上菜稍微慢了些" }
+    ],
+    "risk": { "score": 10, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.95
+  },
+  {
+    "review_id": "r031",
+    "store_name": "美味花園 中山店",
+    "reviewer": "謝雅婷",
+    "rating": 5,
+    "raw_text": "今天點了水果千層蛋糕，簡真是完美！千層皮非常薄，鮮奶油清爽不膩，水果也很新鮮多樣。搭配熱伯爵茶，真的度過了一個非常美好的下午，店裡放的輕爵士樂很有情調，極推！",
+    "review_time": "2026-06-30 15:30:00",
+    "sentiment": { "label": "positive", "score": 0.97 },
+    "emotion": { "joy": 0.96, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.95 },
+      { "topic": "environment", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "positive", "evidence": "水果千層蛋糕，簡直是完美！千層皮非常薄" },
+      { "aspect": "environment", "sentiment": "positive", "evidence": "店裡放的輕爵士樂很有情調" }
+    ],
+    "risk": { "score": 5, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.98
+  },
+  {
+    "review_id": "r032",
+    "store_name": "美味花園 公館店",
+    "reviewer": "古政勳",
+    "rating": 3,
+    "raw_text": "主食的墨西哥雞肉捲稍微普通，裡面的雞肉有點乾，但附贈的烤馬鈴薯非常好吃。另外這家店的椅背有點搖晃，希望可以檢修一下安全防護。",
+    "review_time": "2026-06-30 18:25:00",
+    "sentiment": { "label": "neutral", "score": 0.15 },
+    "emotion": { "joy": 0.40, "anger": 0.0, "disappointment": 0.25 },
+    "intent": { "primary": "praise", "secondary": ["complaint"] },
+    "topics": [
+      { "topic": "food", "score": 0.70 },
+      { "topic": "environment", "score": 0.60 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "墨西哥雞肉捲稍微普通，裡面的雞肉有點乾" },
+      { "aspect": "environment", "sentiment": "negative", "evidence": "桌椅稍微有些老舊，椅子靠背有點搖晃" }
+    ],
+    "risk": { "score": 20, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.91
+  },
+  {
+    "review_id": "r033",
+    "store_name": "美味花園 高雄巨蛋店",
+    "reviewer": "江俊吉",
+    "rating": 2,
+    "raw_text": "今天點了蒜香香草烤魚，但吃了一口發現魚肉有一股很濃的土腥味甚至是微酸的味道，明顯放了很久。我們跟店員說，店員竟然回答說這是特調香草風味，敷衍我們！",
+    "review_time": "2026-06-30 19:50:00",
+    "sentiment": { "label": "negative", "score": -0.87 },
+    "emotion": { "joy": 0.0, "anger": 0.94, "disappointment": 0.80 },
+    "intent": { "primary": "complaint", "secondary": [] },
+    "topics": [
+      { "topic": "food", "score": 0.92 },
+      { "topic": "service", "score": 0.85 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "魚肉有一股很濃的土腥味甚至是微酸的味道，明顯放了很久" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "店員回答說這是我們的「特調香草風味」造成的...敷衍" }
+    ],
+    "risk": { "score": 82, "level": "high", "legal_risk": false, "food_safety": true, "hygiene_risk": false, "escalation_type": "manager_review" },
+    "confidence": 0.96
+  },
+  {
+    "review_id": "r034",
+    "store_name": "美味花園 信義店",
+    "reviewer": "林芷萱",
+    "rating": 5,
+    "raw_text": "這間店真的太讚了！上禮拜過生日，店員不僅幫忙唱生日快樂歌，還送了一整份完整的草莓慕斯蛋糕，上面的蠟燭跟字都寫得很精美。服務貼心程度破表，食物也無可挑剔，必推信義店！",
+    "review_time": "2026-06-30 20:00:00",
+    "sentiment": { "label": "positive", "score": 0.99 },
+    "emotion": { "joy": 0.99, "anger": 0.0, "disappointment": 0.0 },
+    "intent": { "primary": "praise", "secondary": [] },
+    "topics": [
+      { "topic": "service", "score": 0.99 },
+      { "topic": "food", "score": 0.95 }
+    ],
+    "aspects": [
+      { "aspect": "service", "sentiment": "positive", "evidence": "過生日，店員幫忙唱生日快樂歌，還送了一整份蛋糕" }
+    ],
+    "risk": { "score": 0, "level": "low", "legal_risk": false, "food_safety": false, "hygiene_risk": false, "escalation_type": "none" },
+    "confidence": 0.99
+  },
+  {
+    "review_id": "r035",
+    "store_name": "美味花園 台中公益店",
+    "reviewer": "周宗翰",
+    "rating": 1,
+    "raw_text": "點了總匯披薩，送上來竟然看到上面有一隻大蒼蠅被黏在起司上一起烤熟了！我當場反胃，拍照存證跟值班主管抗議。主管還在那裡推脫說是剛剛飛進去的，明明就已經跟起司烤成一體了。食安與衛生管理惡劣到極點，我已經檢舉給衛生局了，等著被查吧！",
+    "review_time": "2026-06-30 20:15:00",
+    "sentiment": { "label": "negative", "score": -0.98 },
+    "emotion": { "joy": 0.0, "anger": 0.99, "disappointment": 0.95 },
+    "intent": { "primary": "complaint", "secondary": ["refund_request"] },
+    "topics": [
+      { "topic": "food", "score": 0.98 },
+      { "topic": "service", "score": 0.90 }
+    ],
+    "aspects": [
+      { "aspect": "food", "sentiment": "negative", "evidence": "披薩上面有一隻大蒼蠅被黏在起司上一起烤熟了" },
+      { "aspect": "service", "sentiment": "negative", "evidence": "主管推脫說是剛剛飛進去的...食安與衛生管理惡劣" }
+    ],
+    "risk": { "score": 98, "level": "critical", "legal_risk": true, "food_safety": true, "hygiene_risk": true, "escalation_type": "legal_review" },
+    "confidence": 0.99
+  }
+]

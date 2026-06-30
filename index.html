@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise AI Omnichannel Reputation Management Platform</title>
+    <meta name="description" content="Enterprise AI omnichannel reputation management platform for multi-source mentions, NLP, vision risk detection, RAG guardrails, reply capability governance, escalation, and CRM workflows.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Critical Alert Banner -->
+    <div class="alert-ribbon" id="alert-ribbon">
+        <i class="fa-solid fa-shield-exclamation pulse-icon"></i>
+        <span id="alert-ribbon-text">偵測到 <strong>4</strong> 則 CRITICAL/HIGH 風險評論需立即人工審核！</span>
+        <button onclick="document.getElementById('alert-ribbon').style.display='none'" class="alert-ribbon-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-logo">
+                <div class="logo-glow-ring">
+                    <i class="fa-solid fa-brain logo-icon"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Reputation<span class="brand-accent">AI</span></h2>
+                    <span>Enterprise Omnichannel OS</span>
+                </div>
+            </div>
+
+            <div class="nav-section-label">主功能</div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard" id="nav-dashboard">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-chart-line"></i></span>
+                    <span>語意分析總覽</span>
+                    <span class="nav-badge nav-badge-blue">LIVE</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="reviews" id="nav-reviews">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-list-check"></i></span>
+                    <span>評論明細清單</span>
+                    <span class="nav-count" id="nav-reviews-count">35</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="rag-playground" id="nav-rag">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                    <span>AI RAG 模擬器</span>
+                    <span class="nav-badge nav-badge-purple">NEW</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="knowledge-base" id="nav-kb">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-book-open"></i></span>
+                    <span>RAG 品牌知識庫</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="nlp-analysis" id="nav-nlp">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-microscope"></i></span>
+                    <span>NLP 深度分析</span>
+                    <span class="nav-badge nav-badge-green">β</span>
+                </a>
+            </nav>
+
+            <div class="nav-section-label">系統</div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item nav-item-alert" id="nav-alerts">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-bell"></i></span>
+                    <span>風險警報中心</span>
+                    <span class="nav-count nav-count-red" id="nav-alert-count">4</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-health">
+                    <div class="health-dot online"></div>
+                    <div class="health-info">
+                        <span class="health-label">AI Guardrail 系統</span>
+                        <span class="health-status">全速運行中</span>
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-placeholder">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <span class="avatar-online-dot"></span>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">系統管理員</span>
+                        <span class="user-role">品牌危機審查專員</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <div class="header-left">
+                    <div class="header-breadcrumb">
+                        <i class="fa-solid fa-building-shield"></i> Enterprise Reputation Command
+                        <i class="fa-solid fa-chevron-right" style="font-size:10px; opacity:.4;"></i>
+                        <span id="breadcrumb-current">語意分析總覽</span>
+                    </div>
+                    <h1 id="page-title">Multi-source Reputation Dashboard</h1>
+                    <p id="page-subtitle">Unify Google Reviews, social, forums, video, news, CSV and Supabase mentions into one governed AI decision layer.</p>
+                </div>
+                <div class="header-actions">
+                    <select class="form-control" id="data-source-select" style="width:190px;">
+                        <option value="local">本地示範資料</option>
+                        <option value="supabase">我的 Supabase 資料庫</option>
+                    </select>
+                    <div class="action-chip" title="AI 防幻覺護欄啟動中">
+                        <span class="status-dot online"></span>
+                        <i class="fa-solid fa-shield-check"></i>
+                        <span>AI Guardrail: ON</span>
+                    </div>
+                    <div class="action-chip" id="last-update-chip">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="last-update-time">剛剛更新</span>
+                    </div>
+                    <button class="btn btn-primary" id="refresh-data-btn">
+                        <i class="fa-solid fa-arrows-rotate"></i> 重整資料
+                    </button>
+                </div>
+            </header>
+
+            <!-- ===================== TAB 1: DASHBOARD ===================== -->
+            <section class="tab-content active" id="dashboard-tab">
+
+                <!-- KPI Cards Row -->
+                <div class="metrics-grid">
+                    <div class="metric-card" id="kpi-total">
+                        <div class="metric-card-glow glow-blue"></div>
+                        <div class="card-icon bg-blue-trans">
+                            <i class="fa-solid fa-comments text-blue"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">總評論數量</span>
+                            <h3 class="metric-value" id="total-reviews-val">0</h3>
+                            <span class="metric-trend text-green"><i class="fa-solid fa-caret-up"></i> +12% 本月</span>
+                        </div>
+                        <div class="metric-mini-chart">
+                            <canvas id="miniChart1" width="60" height="30"></canvas>
+                        </div>
+                    </div>
+                    <div class="metric-card" id="kpi-rating">
+                        <div class="metric-card-glow glow-yellow"></div>
+                        <div class="card-icon bg-yellow-trans">
+                            <i class="fa-solid fa-star text-yellow"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">平均星等評分</span>
+                            <h3 class="metric-value" id="avg-rating-val">0.0</h3>
+                            <span class="metric-stars" id="avg-stars-stars"></span>
+                        </div>
+                    </div>
+                    <div class="metric-card metric-card-alert" id="kpi-risk">
+                        <div class="metric-card-glow glow-red"></div>
+                        <div class="card-icon bg-red-trans" id="risk-card-icon">
+                            <i class="fa-solid fa-triangle-exclamation text-red pulse-icon"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">高/關鍵風險 (SOP 攔截)</span>
+                            <h3 class="metric-value text-red" id="high-risk-val">0</h3>
+                            <span class="metric-trend text-red" id="critical-risk-subtext">需人工審核</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" id="kpi-nps">
+                        <div class="metric-card-glow glow-green"></div>
+                        <div class="card-icon bg-green-trans">
+                            <i class="fa-solid fa-face-smile text-green"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">滿意度淨值 (NPS)</span>
+                            <h3 class="metric-value text-green" id="nps-val">0%</h3>
+                            <span class="metric-trend text-green" id="sentiment-ratio-text">正面評論占比</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" id="kpi-response">
+                        <div class="card-icon bg-purple-trans">
+                            <i class="fa-solid fa-robot text-purple"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">RAG 自動生成率</span>
+                            <h3 class="metric-value text-purple">78.3%</h3>
+                            <span class="metric-trend text-purple"><i class="fa-solid fa-caret-up"></i> 21.7% 轉人工</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="charts-row">
+                    <div class="chart-container card" style="flex: 1.3;">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-bar text-blue"></i> 評等分佈 &amp; 維度滿意度</h3>
+                            <div class="chart-legend" id="chart-legend-1"></div>
+                        </div>
+                        <div class="card-body charts-inner">
+                            <div class="chart-wrapper-half">
+                                <canvas id="ratingChart"></canvas>
+                            </div>
+                            <div class="chart-wrapper-half">
+                                <canvas id="aspectChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Word Cloud -->
+                    <div class="chart-container card wordcloud-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-cloud text-blue"></i> 評論關鍵字熱圖</h3>
+                            <button class="btn btn-text btn-small" id="reset-wordcloud-filter" style="display:none;">
+                                <i class="fa-solid fa-filter-circle-xmark"></i> 清除篩選
+                            </button>
+                        </div>
+                        <div class="card-body wordcloud-body">
+                            <div class="canvas-wrapper">
+                                <canvas id="wordCloudCanvas"></canvas>
+                            </div>
+                            <div class="wordcloud-hint">
+                                <i class="fa-regular fa-hand-pointer"></i> 點擊關鍵字可篩選相關評論
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="charts-row">
+                    <div class="chart-container card width-60">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-store text-blue"></i> 各門市評分與風險分析</h3>
+                        </div>
+                        <div class="card-body" style="height:260px;">
+                            <canvas id="storeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container card width-40">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-shield-halved text-red"></i> 系統安全警示分布</h3>
+                        </div>
+                        <div class="card-body" style="height:260px;">
+                            <canvas id="riskDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 3: Timeline + Emotion -->
+                <div class="charts-row">
+                    <div class="chart-container card" style="flex:1;">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-line text-green"></i> 情感趨勢時序分析</h3>
+                            <div style="display:flex;gap:12px;align-items:center;font-size:11px;">
+                                <span style="color:var(--color-success);">● 正面</span>
+                                <span style="color:var(--color-danger);">● 負面</span>
+                                <span style="color:var(--color-warning);">● 中性</span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="height:220px;">
+                            <canvas id="sentimentTimelineChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container card" style="flex: 0 0 300px;">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-face-smile-beam text-purple"></i> 情緒分布</h3>
+                        </div>
+                        <div class="card-body" style="height:220px;">
+                            <canvas id="emotionDistChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Critical Alerts -->
+                <div class="card recent-alerts-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-bell text-red pulse-icon"></i> 最新高風險警報 — 待人工審核處理</h3>
+                        <button class="btn btn-text btn-small" onclick="switchTab('reviews')">
+                            查看全部 <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="alerts-list" id="recent-alerts-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== TAB 2: REVIEWS LIST ===================== -->
+            <section class="tab-content" id="reviews-tab">
+                <!-- Filters Card -->
+                <div class="filters-card card">
+                    <div class="filters-header">
+                        <h3><i class="fa-solid fa-sliders"></i> 高級過濾器</h3>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <span class="filter-count-badge" id="filter-active-badge" style="display:none;"></span>
+                            <button class="btn btn-text btn-small" id="clear-filters-btn">
+                                <i class="fa-solid fa-rotate-left"></i> 重置
+                            </button>
+                        </div>
+                    </div>
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label for="filter-store"><i class="fa-solid fa-location-dot"></i> 門市選擇</label>
+                            <select id="filter-store" class="form-control">
+                                <option value="all">所有門市</option>
+                                <option value="美味花園 信義店">信義店</option>
+                                <option value="美味花園 中山店">中山店</option>
+                                <option value="美味花園 公館店">公館店</option>
+                                <option value="美味花園 台中公益店">台中公益店</option>
+                                <option value="美味花園 高雄巨蛋店">高雄巨蛋店</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-rating"><i class="fa-solid fa-star"></i> 星等評分</label>
+                            <select id="filter-rating" class="form-control">
+                                <option value="all">所有評分</option>
+                                <option value="5">⭐⭐⭐⭐⭐ 5 星</option>
+                                <option value="4">⭐⭐⭐⭐ 4 星</option>
+                                <option value="3">⭐⭐⭐ 3 星</option>
+                                <option value="2">⭐⭐ 2 星</option>
+                                <option value="1">⭐ 1 星</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-sentiment"><i class="fa-solid fa-face-meh"></i> 情感傾向</label>
+                            <select id="filter-sentiment" class="form-control">
+                                <option value="all">所有情感</option>
+                                <option value="positive">😊 正面 (Positive)</option>
+                                <option value="neutral">😐 中性 (Neutral)</option>
+                                <option value="negative">😡 負面 (Negative)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-risk"><i class="fa-solid fa-shield-halved"></i> 風險等級</label>
+                            <select id="filter-risk" class="form-control">
+                                <option value="all">所有風險</option>
+                                <option value="low">🟢 低風險 (Low)</option>
+                                <option value="medium">🟡 中風險 (Medium)</option>
+                                <option value="high">🔴 高風險 (High)</option>
+                                <option value="critical">🚨 關鍵風險 (Critical)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-wrapper">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="search-input" class="form-control search-control"
+                                   placeholder="搜尋評論內容、顧客姓名、關鍵字...">
+                            <button class="search-clear-btn" id="search-clear-btn" style="display:none;">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Table -->
+                <div class="reviews-table-card card">
+                    <div class="table-header">
+                        <div class="table-info">
+                            篩選結果：<strong id="filtered-count">0</strong> / <span id="total-count">0</span> 筆評論
+                        </div>
+                        <div class="table-sort-hint">
+                            <i class="fa-solid fa-sort"></i> 最新時間排序
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="reviews-table">
+                            <thead>
+                                <tr>
+                                    <th>門市 / 時間</th>
+                                    <th>顧客 / 星等</th>
+                                    <th style="width:38%;">評論內容</th>
+                                    <th>情感指標</th>
+                                    <th>風險審核</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviews-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-empty" id="table-empty" style="display:none;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <p>找不到符合條件的評論</p>
+                        <button class="btn btn-secondary btn-small" id="empty-reset-btn">清除所有過濾</button>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== TAB 3: RAG PLAYGROUND ===================== -->
+            <section class="tab-content" id="rag-playground-tab">
+                <div class="playground-layout">
+                    <!-- Left Panel: Select Review -->
+                    <div class="playground-control card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-gears text-blue"></i> 選擇評論</h3>
+                            <span class="step-badge">步驟 1</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="playground-review-select" class="form-label">
+                                    選擇欲模擬 RAG 處理的 Google 評論
+                                </label>
+                                <select id="playground-review-select" class="form-control">
+                                    <option value="">-- 請選擇評論 --</option>
+                                    <option value="r035">🚨 [CRITICAL] 披薩蒼蠅已烤熟 — 周宗翰 1★ (台中公益)</option>
+                                    <option value="r029">🚨 [CRITICAL] 全家咖啡後拉肚子發燒 — 蔡佩珊 1★ (台中公益)</option>
+                                    <option value="r006">🚨 [CRITICAL] 海鮮拼盤食物中毒 — 王健宇 1★ (台中公益)</option>
+                                    <option value="r008">🚨 [CRITICAL] 火鍋發現活蟑螂 — 黃瑞奇 1★ (高雄巨蛋)</option>
+                                    <option value="r022">🔴 [HIGH] 盤子上有蒼蠅屍體 — 林立群 1★ (中山店)</option>
+                                    <option value="r033">🔴 [HIGH] 魚肉有酸味店員敷衍 — 江俊吉 2★ (高雄巨蛋)</option>
+                                    <option value="r020">🔴 [HIGH] 蛤蜊臭味無後續說明 — 鄭大為 2★ (公館店)</option>
+                                    <option value="r015">🔴 [HIGH] 漢堡生肉罔顧人命 — 許雅婷 2★ (信義店)</option>
+                                    <option value="r005">🔴 [HIGH] 湯裡頭髮 態度冷漠 — 李佩真 1★ (公館店)</option>
+                                    <option value="r018">🔴 [HIGH] 多刷費用誠信問題 — 李建德 1★ (高雄巨蛋)</option>
+                                    <option value="r007">🟡 [MEDIUM] 服務生翻白眼 — 劉芳妤 2★ (中山店)</option>
+                                    <option value="r026">🟡 [MEDIUM] 店長叫客人去別家 — 何冠達 1★ (公館店)</option>
+                                    <option value="r004">🟢 [LOW] 排隊一個半小時 — David Chen 3★ (信義店)</option>
+                                    <option value="r001">🟢 [LOW] 烤雞超好吃極推 — 林小明 5★ (信義店)</option>
+                                </select>
+                            </div>
+
+                            <!-- Selected Review Preview -->
+                            <div id="selected-review-card" class="selected-review-card" style="display:none;">
+                                <div class="review-meta">
+                                    <span class="store-badge" id="preview-store">美味花園</span>
+                                    <span class="time-stamp" id="preview-time"></span>
+                                </div>
+                                <div class="reviewer-stars">
+                                    <strong id="preview-reviewer"></strong>
+                                    <span id="preview-stars"></span>
+                                </div>
+                                <div class="review-text-box">
+                                    <p id="preview-text"></p>
+                                </div>
+
+                                <hr class="divider">
+
+                                <h4 class="section-title"><i class="fa-solid fa-microscope text-blue"></i> NLP 語意特徵</h4>
+                                <div class="nlp-details-grid">
+                                    <div class="nlp-detail-item">
+                                        <span class="label">情感分數</span>
+                                        <span class="val font-semibold" id="preview-sentiment">—</span>
+                                    </div>
+                                    <div class="nlp-detail-item">
+                                        <span class="label">主導情緒</span>
+                                        <span class="val font-semibold" id="preview-emotion">—</span>
+                                    </div>
+                                    <div class="nlp-detail-item">
+                                        <span class="label">顧客意圖</span>
+                                        <span class="val" id="preview-intent">—</span>
+                                    </div>
+                                    <div class="nlp-detail-item">
+                                        <span class="label">關鍵 Aspect</span>
+                                        <span class="val" id="preview-aspect">—</span>
+                                    </div>
+                                </div>
+
+                                <div class="risk-indicator-box" id="preview-risk-box">
+                                    <div class="risk-header">
+                                        <span>風險嚴重度：<strong id="preview-risk-level">—</strong></span>
+                                        <span class="risk-score-badge" id="preview-risk-score">0/100</span>
+                                    </div>
+                                    <div class="risk-gauge-bar">
+                                        <div class="risk-gauge-fill" id="preview-risk-gauge"></div>
+                                    </div>
+                                    <div class="risk-flags-list" id="preview-risk-flags"></div>
+                                </div>
+
+                                <button class="btn btn-primary btn-block btn-large margin-top-20" id="run-rag-btn">
+                                    <i class="fa-solid fa-play"></i> 啟動 RAG 檢索與回覆生成
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: RAG Pipeline -->
+                    <div class="playground-result-container">
+                        <!-- RAG Pipeline Step Indicator -->
+                        <div class="rag-pipeline-steps" id="rag-pipeline-steps" style="display:none;">
+                            <div class="pipeline-step done" id="pipe-step-1">
+                                <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+                                <span>① 評論輸入</span>
+                            </div>
+                            <div class="pipeline-connector" id="pipe-conn-1"></div>
+                            <div class="pipeline-step" id="pipe-step-2">
+                                <div class="step-circle"><span>2</span></div>
+                                <span>② KB 檢索</span>
+                            </div>
+                            <div class="pipeline-connector" id="pipe-conn-2"></div>
+                            <div class="pipeline-step" id="pipe-step-3">
+                                <div class="step-circle"><span>3</span></div>
+                                <span>③ Prompt 構造</span>
+                            </div>
+                            <div class="pipeline-connector" id="pipe-conn-3"></div>
+                            <div class="pipeline-step" id="pipe-step-4">
+                                <div class="step-circle"><span>4</span></div>
+                                <span>④ AI 生成</span>
+                            </div>
+                            <div class="pipeline-connector" id="pipe-conn-4"></div>
+                            <div class="pipeline-step" id="pipe-step-5">
+                                <div class="step-circle"><span>5</span></div>
+                                <span>⑤ 安全驗證</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: RAG Retrieval -->
+                        <div class="playground-step card" id="rag-step-container" style="display:none;">
+                            <div class="card-header bg-gradient-blue">
+                                <h3><i class="fa-solid fa-database"></i> 步驟 2 / RAG 品牌 SOP 知識庫檢索結果</h3>
+                                <span class="step-badge step-badge-blue">防幻覺依據</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="rag-retrieved-items" id="rag-rules-output"></div>
+                                <div class="prompt-preview-container margin-top-15">
+                                    <div class="prompt-header" id="prompt-toggle-btn">
+                                        <span><i class="fa-solid fa-code"></i> 檢視發送至 AI Agent 的構造化 Prompt（含 {kb_context} 注入）</span>
+                                        <i class="fa-solid fa-chevron-down arrow-icon" id="prompt-arrow"></i>
+                                    </div>
+                                    <div class="prompt-body" id="prompt-body-content" style="display:none;">
+                                        <pre><code id="prompt-text-block" class="prompt-code"></code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3/4: LLM Comparison -->
+                        <div class="playground-step card" id="llm-comparison-container" style="display:none;">
+                            <div class="card-header bg-gradient-purple">
+                                <h3><i class="fa-solid fa-code-compare"></i> 步驟 4 / AI 生成對比：傳統幻覺 vs. RAG 安全限制</h3>
+                            </div>
+                            <div class="card-body comparison-grid">
+                                <!-- Bad: Hallucinating LLM -->
+                                <div class="comparison-column column-bad">
+                                    <div class="column-title">
+                                        <i class="fa-solid fa-circle-xmark text-red"></i>
+                                        <span>傳統 LLM（無 RAG 護欄）</span>
+                                    </div>
+                                    <div class="typing-indicator" id="typing-bad" style="display:none;">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                    <div class="reply-bubble bubble-bad">
+                                        <p id="compare-bad-reply">—</p>
+                                    </div>
+                                    <div class="validation-status bg-red-trans">
+                                        <span class="status-title text-red">
+                                            <i class="fa-solid fa-triangle-exclamation"></i> 品牌風險警報
+                                        </span>
+                                        <p class="status-desc text-red" id="bad-risk-desc">—</p>
+                                    </div>
+                                </div>
+
+                                <!-- Good: RAG Constrained LLM -->
+                                <div class="comparison-column column-good">
+                                    <div class="column-title">
+                                        <i class="fa-solid fa-circle-check text-green"></i>
+                                        <span>RAG 限制型生成（嚴守 SOP 護欄）</span>
+                                    </div>
+                                    <div class="typing-indicator" id="typing-good" style="display:none;">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                    <div class="reply-bubble bubble-good">
+                                        <p id="compare-good-reply">—</p>
+                                    </div>
+                                    <div class="validation-status bg-green-trans">
+                                        <span class="status-title text-green">
+                                            <i class="fa-solid fa-shield-check"></i> 系統安全護欄通過
+                                        </span>
+                                        <p class="status-desc text-green" id="good-safe-desc">—</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 5: Structured JSON Output -->
+                            <div class="card-footer-section">
+                                <div class="footer-header">
+                                    <h4><i class="fa-solid fa-brackets-curly text-yellow"></i> 步驟 5 / 結構化輸出驗證 JSON Schema</h4>
+                                    <span class="badge badge-pos" id="json-validation-badge">✓ Schema 驗證通過</span>
+                                </div>
+                                <pre><code id="json-structured-output" class="json-code"></code></pre>
+                                <div class="form-group margin-top-15">
+                                    <label class="form-label">Final AI Reply Draft</label>
+                                    <textarea id="final-reply-draft" class="form-control" rows="4" placeholder="AI 生成後會出現在這裡，可由 Manager 編修後提交。"></textarea>
+                                </div>
+                                <div class="margin-top-15" style="display:flex;gap:10px;flex-wrap:wrap;">
+                                    <button class="btn btn-primary" id="submit-ai-reply-btn" style="display:none;">
+                                        <i class="fa-solid fa-paper-plane"></i> 提交處理
+                                    </button>
+                                    <button class="btn btn-secondary" id="create-ticket-btn" style="display:none;">
+                                        <i class="fa-solid fa-ticket"></i> 建立 CRM Ticket
+                                    </button>
+                                    <span class="badge badge-neu" id="reply-capability-badge" style="display:none;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== TAB 4: KNOWLEDGE BASE ===================== -->
+            <section class="tab-content" id="knowledge-base-tab">
+                <!-- Header Banner -->
+                <div class="kb-header-card card bg-gradient-dark">
+                    <div class="card-body">
+                        <div class="kb-header-content">
+                            <div>
+                                <h2>品牌回覆安全防線設定 <span style="font-size:14px;opacity:.6;">(RAG Policy Knowledge Base)</span></h2>
+                                <p style="color:var(--text-secondary);margin-top:8px;line-height:1.6;">
+                                    此處定義的資料結構將作為 RAG Pipeline 的<strong>唯一檢索邊界</strong>。AI Agent 僅能根據下方載入的 SOP 條款與 Few-Shot 範例生成回覆，
+                                    禁止在 SOP 之外自由發揮，藉此<strong>徹底杜絕幻覺與過度承諾</strong>。
+                                </p>
+                            </div>
+                            <div class="kb-stats">
+                                <div class="kb-stat-item">
+                                    <span class="kb-stat-num" id="kb-sop-count">5</span>
+                                    <span class="kb-stat-label">SOP 條款</span>
+                                </div>
+                                <div class="kb-stat-item">
+                                    <span class="kb-stat-num" id="kb-shot-count">3</span>
+                                    <span class="kb-stat-label">Few-Shot 範例</span>
+                                </div>
+                                <div class="kb-stat-item">
+                                    <span class="kb-stat-num">5</span>
+                                    <span class="kb-stat-label">門市資料</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="brand-rules-tags margin-top-15">
+                            <span class="rule-tag rule-tag-blue"><i class="fa-solid fa-check"></i> 字數上限 100 字</span>
+                            <span class="rule-tag rule-tag-blue"><i class="fa-solid fa-check"></i> 使用繁體中文</span>
+                            <span class="rule-tag rule-tag-red"><i class="fa-solid fa-ban"></i> 禁止承諾賠償金額</span>
+                            <span class="rule-tag rule-tag-red"><i class="fa-solid fa-ban"></i> 禁止公開承認食安疏失</span>
+                            <span class="rule-tag rule-tag-yellow"><i class="fa-solid fa-flag"></i> 食安/法務 強制人工審核</span>
+                            <span class="rule-tag rule-tag-blue"><i class="fa-solid fa-check"></i> 必須引導私訊聯繫</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Store Info Cards Row -->
+                <div class="store-info-row" id="store-info-row">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- SOP + Few-Shot Grid -->
+                <div class="kb-grid">
+                    <!-- SOP Rules -->
+                    <div class="kb-section-card card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-shield-halved text-blue"></i> 分類處置 SOP 條款</h3>
+                            <span class="badge badge-pos" id="kb-sop-count-badge">5 條規則</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="accordion-list" id="kb-sop-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Few-Shot Examples -->
+                    <div class="kb-section-card card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-graduation-cap text-green"></i> 核准回覆範例 (Few-Shot)</h3>
+                            <span class="badge badge-pos" id="kb-fewshot-count-badge">3 則範例</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="fewshot-list" id="kb-fewshot-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== TAB 5: NLP DEEP ANALYSIS ===================== -->
+            <section class="tab-content" id="nlp-analysis-tab">
+                <div class="nlp-intro-banner card bg-gradient-dark">
+                    <h2><i class="fa-solid fa-microscope text-blue"></i> NLP 深度語意分析實驗室</h2>
+                    <p>輸入任意文字或選擇已有評論，即時模擬 NLP Pipeline 完整分析流程，包含情感分類、情緒識別、Aspect 提取與風險評分。</p>
+                </div>
+
+                <div class="nlp-layout">
+                    <!-- Left: Input Panel -->
+                    <div class="card nlp-input-panel">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-keyboard text-blue"></i> 輸入文字分析</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">快速選入評論範例</label>
+                                <select id="nlp-review-select" class="form-control">
+                                    <option value="">-- 或選擇現有評論 --</option>
+                                </select>
+                            </div>
+                            <div class="form-group margin-top-15">
+                                <label class="form-label">評論文字（可自由輸入）</label>
+                                <textarea id="nlp-text-input" class="form-control nlp-textarea" rows="6"
+                                    placeholder="請輸入顧客評論文字，AI 將即時分析其情感、情緒、意圖與風險指數..."></textarea>
+                                <div class="textarea-info">
+                                    <span id="nlp-char-count">0 字</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block btn-large" id="run-nlp-btn">
+                                <i class="fa-solid fa-brain"></i> 執行 NLP 語意分析
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results Panel -->
+                    <div class="nlp-results-panel" id="nlp-results-panel" style="opacity:0.4;pointer-events:none;">
+                        <!-- Sentiment Bar -->
+                        <div class="card nlp-result-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-chart-simple text-green"></i> 情感分析結果</h3>
+                                <span class="badge" id="nlp-sentiment-badge">—</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="sentiment-spectrum">
+                                    <span class="spectrum-label text-red">負面</span>
+                                    <div class="spectrum-track">
+                                        <div class="spectrum-fill" id="nlp-sentiment-bar"></div>
+                                        <div class="spectrum-pointer" id="nlp-sentiment-pointer"></div>
+                                    </div>
+                                    <span class="spectrum-label text-green">正面</span>
+                                </div>
+                                <div class="sentiment-score-display" id="nlp-sentiment-score">分數：0.00</div>
+                            </div>
+                        </div>
+
+                        <!-- Emotion Bars -->
+                        <div class="card nlp-result-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-face-smile-beam text-purple"></i> 情緒強度分析</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="emotion-bars" id="nlp-emotion-bars">
+                                    <div class="emotion-bar-item">
+                                        <div class="emotion-label"><span class="emotion-emoji">😊</span> 喜悅 Joy</div>
+                                        <div class="emotion-track"><div class="emotion-fill emotion-joy" id="nlp-joy-bar" style="width:0%"></div></div>
+                                        <span class="emotion-pct" id="nlp-joy-pct">0%</span>
+                                    </div>
+                                    <div class="emotion-bar-item">
+                                        <div class="emotion-label"><span class="emotion-emoji">😡</span> 憤怒 Anger</div>
+                                        <div class="emotion-track"><div class="emotion-fill emotion-anger" id="nlp-anger-bar" style="width:0%"></div></div>
+                                        <span class="emotion-pct" id="nlp-anger-pct">0%</span>
+                                    </div>
+                                    <div class="emotion-bar-item">
+                                        <div class="emotion-label"><span class="emotion-emoji">😞</span> 失望 Disappointment</div>
+                                        <div class="emotion-track"><div class="emotion-fill emotion-sad" id="nlp-sad-bar" style="width:0%"></div></div>
+                                        <span class="emotion-pct" id="nlp-sad-pct">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aspect + Intent -->
+                        <div class="card nlp-result-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-tags text-yellow"></i> Aspect 提取 &amp; 意圖識別</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="aspect-intent-grid">
+                                    <div>
+                                        <div class="sub-label">顧客意圖</div>
+                                        <div class="intent-display" id="nlp-intent-display">—</div>
+                                    </div>
+                                    <div>
+                                        <div class="sub-label">關鍵 Aspects</div>
+                                        <div class="aspect-tags" id="nlp-aspect-tags"></div>
+                                    </div>
+                                </div>
+                                <div class="aspect-evidence-list" id="nlp-evidence-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- Risk Score -->
+                        <div class="card nlp-result-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-shield-halved text-red"></i> 綜合風險評分</h3>
+                                <span class="risk-score-big" id="nlp-risk-score-big">0</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="risk-gauge-bar risk-gauge-big">
+                                    <div class="risk-gauge-fill" id="nlp-risk-gauge-big"></div>
+                                </div>
+                                <div class="risk-flags-grid" id="nlp-risk-flags-grid"></div>
+                                <div class="nlp-action-recommendation" id="nlp-action-rec"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ===================== TAB 6: ALERTS CENTER ===================== -->
+            <section class="tab-content" id="alerts-tab">
+                <div class="card alerts-center-header">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-bell text-red pulse-icon"></i> 風險警報中心 — 待處理事項</h3>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-secondary btn-small" id="mark-all-read-btn">
+                                <i class="fa-solid fa-check-double"></i> 全部標為已讀
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alerts-filter-row">
+                        <button class="alert-filter-btn active" data-alert-filter="all">全部</button>
+                        <button class="alert-filter-btn" data-alert-filter="critical">🚨 CRITICAL</button>
+                        <button class="alert-filter-btn" data-alert-filter="high">🔴 HIGH</button>
+                        <button class="alert-filter-btn" data-alert-filter="medium">🟡 MEDIUM</button>
+                    </div>
+                </div>
+                <div class="alerts-full-list" id="alerts-full-list">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===================== REVIEW DETAIL MODAL ===================== -->
+    <div class="modal-backdrop" id="review-modal" style="display:none;" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-magnifying-glass-chart text-blue"></i> 評論語意與風險解析</h3>
+                <button class="close-modal-btn" id="close-modal-btn" aria-label="關閉">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-content"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
