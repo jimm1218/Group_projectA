@@ -1,35 +1,35 @@
-﻿# Enterprise AI Omnichannel Reputation Management Platform
+# Enterprise AI 全通路聲譽管理平台
 
-This project is an Enterprise AI Omnichannel Reputation Management Platform. It started as a Google Review AI dashboard prototype, but has now been repositioned as a multi-source reputation command center that can ingest, normalize, analyze, govern, and route brand mentions across channels.
+本專案是一套 Enterprise AI Omnichannel Reputation Management Platform。它最初是 Google Review AI Dashboard prototype，現在已重新定位為「多來源輿情與品牌聲譽管理平台」，負責蒐集、標準化、分析、治理並分派各通路的品牌 Mention。
 
-The current frontend prototype connects to Supabase, supports local demo data, maps Supabase `review` rows into a unified Mention Schema, and demonstrates AI-assisted RAG reply generation with reply capability governance.
+目前前端 prototype 已串接 Supabase，支援本地示範資料與 Supabase 線上資料切換，並會將 Supabase `review` table 的資料轉換成統一 Mention Schema，再進入 NLP、風險判斷、RAG 知識庫檢索與 AI 回覆治理流程。
 
-## What The Platform Does
+## 平台目標
 
-- Ingests mentions from Google Business Reviews, PTT, Mobile01, Facebook, Instagram, Threads, Dcard, YouTube, News/RSS, CSV Import, and Supabase.
-- Converts every source record into a unified Mention Schema before AI processing.
-- Runs mentions through NLP, risk scoring, RAG knowledge retrieval, and AI reply decision logic.
-- Separates official reply capability from internal suggested-response workflows.
-- Prevents unsafe AI replies through RAG guardrails and human-review gates.
-- Preserves a future SaaS path for FastAPI, Celery, Redis, vector database, n8n, AI Agents, MCP, and multi-tenant governance.
+- 整合 Google Business Reviews、PTT、Mobile01、Facebook、Instagram、Threads、Dcard、YouTube、News/RSS、CSV Import 與 Supabase 等來源。
+- 所有來源資料必須先轉換為統一 Mention Schema，才進入後續 AI Pipeline。
+- Mention 會經過 NLP、Risk Engine、RAG Knowledge Base 與 AI Reply Engine 處理。
+- 透過 Reply Capability Layer 區分「可官方發布」與「只能內部建議回覆」的來源。
+- 透過 RAG Guardrails 與人工審核機制，避免 AI 產生高風險或不合規回覆。
+- 保留未來擴充 FastAPI、Celery、Redis、向量資料庫、n8n、AI Agent、MCP 與多租戶 SaaS 架構的能力。
 
-## Current Prototype Status
+## 目前 Prototype 狀態
 
-Implemented in the current codebase:
+目前已完成：
 
-- Local demo dataset mode.
-- Supabase dataset mode using project `mzonkpfagqdhaqwybtuo`.
-- Data source selector in the dashboard header.
-- Supabase `review` table adapter.
-- Unified Mention Schema adapter in `app.js`.
-- Reply Capability Layer.
-- Generic RAG reply generation for both local and Supabase data.
-- Editable AI reply draft.
-- Submit handling that routes Google-like sources to manager approval and other sources to CRM/suggested-response flow.
+- 本地示範資料模式。
+- Supabase 線上資料模式，使用 project `mzonkpfagqdhaqwybtuo`。
+- Dashboard 右上角資料來源切換器。
+- Supabase `review` table adapter。
+- `app.js` 中的 Unified Mention Schema adapter。
+- Reply Capability Layer。
+- 本地資料與 Supabase 資料皆可使用的通用 RAG 回覆生成。
+- 可編輯的 AI 回覆草稿。
+- 提交流程模擬：Google 類來源進入 Manager Approval，其餘來源建立 CRM / Suggested Response 流程。
 
-## Data Sources
+## 支援資料來源
 
-Supported source categories:
+目前平台設計支援以下來源：
 
 - Google Business Reviews
 - PTT
@@ -43,7 +43,7 @@ Supported source categories:
 - CSV Import
 - Supabase
 
-Every source must be normalized before downstream AI processing:
+資料流設計如下：
 
 ```text
 Source Connectors
@@ -57,35 +57,35 @@ Source Connectors
   -> Decision / Escalation / CRM Workflows
 ```
 
-## Supabase Connection
+## Supabase 連線
 
-The prototype currently uses:
+目前 prototype 使用：
 
 ```js
-SUPABASE_URL = "https://mzonkpfagqdhaqwybtuo.supabase.co"
+SUPABASE_URL = ""
 SUPABASE_REVIEW_TABLE = "review"
 ```
 
-The frontend uses the publishable key configured in `app.js`. Do not place a Supabase `service_role` secret in frontend code.
+前端使用的是 `app.js` 中設定的 Supabase publishable key。請不要把 Supabase `service_role` secret 放進前端程式碼。
 
 ## Reply Capability Layer
 
-Google Business Reviews:
+Google Business Reviews：
 
-- AI can generate a reply draft.
-- Manager approval is required.
-- Approved replies may be published through Google Business API in a future backend implementation.
+- AI 可以產生官方回覆草稿。
+- 必須經過 Manager Approve。
+- 未來後端完成後，核准的回覆才可透過 Google Business API 發布。
 
-Other social, forum, video, news, CSV, and Supabase sources:
+其他社群、論壇、影音、新聞、CSV 與 Supabase 來源：
 
-- AI can generate suggested responses only.
-- The system must not publish comments through platform APIs.
-- The system may create CRM tickets.
-- The system may notify customer service, PR, legal, operations, or store managers.
+- AI 只能產生 Suggested Response。
+- 系統不得呼叫平台 API 發布留言。
+- 可以建立 CRM Ticket。
+- 可以通知客服、公關、法務、營運或門市主管。
 
-## AI Reply Output Contract
+## AI 回覆輸出格式
 
-Every AI reply decision must produce:
+每一次 AI 回覆決策都必須產生：
 
 ```json
 {
@@ -100,22 +100,22 @@ Every AI reply decision must produce:
 
 ## RAG Guardrails
 
-The AI Reply Engine must not:
+AI Reply Engine 不得：
 
-- Admit liability.
-- Promise refunds.
-- Promise compensation.
-- Fabricate company policy.
-- Fabricate promotions.
-- Fabricate store information.
-- Fabricate business hours.
-- Fabricate phone numbers.
-- Fabricate product information.
-- Speculate about unverified events.
+- 承認責任。
+- 承諾退款。
+- 承諾賠償。
+- 編造公司政策。
+- 編造優惠方案。
+- 編造門市資訊。
+- 編造營業時間。
+- 編造電話。
+- 編造產品資訊。
+- 推測未經確認的事件。
 
-## Dashboard Modules
+## Dashboard 模組
 
-Current prototype modules:
+目前 prototype 已包含：
 
 - Multi-source Reputation Dashboard
 - Mention list and filtering
@@ -124,7 +124,7 @@ Current prototype modules:
 - NLP analysis simulator
 - Risk alert center
 
-Target enterprise modules:
+目標 Enterprise 模組：
 
 - AI Decision Center
 - Escalation Center
@@ -134,46 +134,46 @@ Target enterprise modules:
 - Competitor Comparison
 - AI Suggested Actions
 
-## Project Files
+## 專案檔案
 
 ```text
-index.html                    Frontend dashboard shell
-styles.css                    Dashboard styling
-app.js                        Supabase connection, Mention adapter, charts, filters, RAG simulator
-mention_schema.md             Unified Mention Schema and AI reply output contract
-enterprise_architecture.md    Enterprise SaaS target architecture
-implementation_plan.md        Phased implementation plan
-walkthrough.md                User walkthrough and demo guide
+index.html                    前端 Dashboard 主體
+styles.css                    Dashboard 樣式
+app.js                        Supabase 連線、Mention adapter、圖表、篩選、RAG simulator
+mention_schema.md             統一 Mention Schema 與 AI Reply Output Contract
+enterprise_architecture.md    Enterprise SaaS 目標架構
+implementation_plan.md        分階段實作計畫
+walkthrough.md                操作導覽與 Demo 流程
 rag_kb.json                   Prototype RAG policy knowledge base
 rag_pipeline.py               Prototype Python RAG simulation
 reviews_data.json             Legacy local Google Review demo dataset
 ```
 
-## Local Run
+## 本機啟動
 
 ```powershell
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open:
+開啟：
 
 ```text
 http://127.0.0.1:8000/index.html
 ```
 
-## Verification
+## 驗證方式
 
-Recommended checks:
+建議先執行：
 
 ```powershell
 node --check app.js
 ```
 
-Then verify in the browser:
+接著在瀏覽器確認：
 
-- Switch between `本地示範資料` and `我的 Supabase 資料庫`.
-- Open the AI RAG simulator.
-- Select a local or Supabase mention.
-- Generate an AI reply draft.
-- Edit the final draft.
-- Submit handling or create a CRM ticket.
+- 可在 `本地示範資料` 與 `我的 Supabase 資料庫` 之間切換。
+- 可開啟 AI RAG simulator。
+- 可選擇本地或 Supabase Mention。
+- 可產生 AI reply draft。
+- 可編輯 final draft。
+- 可提交處理或建立 CRM Ticket。
