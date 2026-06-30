@@ -1,5 +1,7 @@
 # Enterprise AI 全通路聲譽管理平台
 
+**連結：https://jimm1218.github.io/Group_projectA/**
+
 本專案是一套 Enterprise AI Omnichannel Reputation Management Platform。它最初是 Google Review AI Dashboard prototype，現在已重新定位為「多來源輿情與品牌聲譽管理平台」，負責蒐集、標準化、分析、治理並分派各通路的品牌 Mention。
 
 目前前端 prototype 已串接 Supabase，支援本地示範資料與 Supabase 線上資料切換，並會將 Supabase `review` table 的資料轉換成統一 Mention Schema，再進入 NLP、風險判斷、RAG 知識庫檢索與 AI 回覆治理流程。
