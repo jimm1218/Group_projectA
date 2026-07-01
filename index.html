@@ -41,17 +41,22 @@
                 </div>
             </div>
 
-            <div class="nav-section-label">主功能</div>
+            <div class="nav-section-label">監控中心 (Monitoring Center)</div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item active" data-tab="dashboard" id="nav-dashboard">
                     <span class="nav-icon-wrap"><i class="fa-solid fa-chart-line"></i></span>
-                    <span>語意分析總覽</span>
+                    <span>輿情分析看板</span>
                     <span class="nav-badge nav-badge-blue">LIVE</span>
                 </a>
                 <a href="#" class="nav-item" data-tab="reviews" id="nav-reviews">
                     <span class="nav-icon-wrap"><i class="fa-solid fa-list-check"></i></span>
-                    <span>評論明細清單</span>
+                    <span>留言輿情監控</span>
                     <span class="nav-count" id="nav-reviews-count">35</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="nlp-analysis" id="nav-nlp">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-microscope"></i></span>
+                    <span>NLP 深度分析</span>
+                    <span class="nav-badge nav-badge-green">β</span>
                 </a>
                 <a href="#" class="nav-item" data-tab="rag-playground" id="nav-rag">
                     <span class="nav-icon-wrap"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
@@ -62,10 +67,23 @@
                     <span class="nav-icon-wrap"><i class="fa-solid fa-book-open"></i></span>
                     <span>RAG 品牌知識庫</span>
                 </a>
-                <a href="#" class="nav-item" data-tab="nlp-analysis" id="nav-nlp">
-                    <span class="nav-icon-wrap"><i class="fa-solid fa-microscope"></i></span>
-                    <span>NLP 深度分析</span>
-                    <span class="nav-badge nav-badge-green">β</span>
+            </nav>
+
+            <div class="nav-section-label">回覆中心 (Response Hub)</div>
+            <nav class="nav-menu" id="nav-response-hub">
+                <a href="#" class="nav-item" data-tab="response-auth" id="nav-response-auth">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-key"></i></span>
+                    <span>帳號連結</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="response-pending" id="nav-response-pending">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-reply-all"></i></span>
+                    <span>待處理回覆</span>
+                    <span class="nav-count nav-count-red" id="nav-response-pending-count">3</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="response-submitted" id="nav-response-submitted">
+                    <span class="nav-icon-wrap"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                    <span>已提交紀錄</span>
+                    <span class="nav-count nav-badge-blue" id="nav-response-submitted-count">0</span>
                 </a>
             </nav>
 
@@ -821,7 +839,283 @@
                 </div>
             </section>
 
+            <!-- ===================== TAB 7: RESPONSE AUTH ===================== -->
+            <section class="tab-content" id="response-auth-tab">
+                <div class="kb-header-card card bg-gradient-dark">
+                    <div class="card-body">
+                        <h2><i class="fa-solid fa-key text-blue"></i> 帳號授權管理</h2>
+                        <p style="color:var(--text-secondary);margin-top:8px;">
+                            連結您的 Facebook 粉絲專頁、Instagram 商業帳號以及 Google 地標，進行 AI 建議回覆與自動化提交。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="auth-platforms-grid">
+                    <!-- Google Business Profile -->
+                    <div class="auth-card card" id="auth-card-google">
+                        <div class="auth-card-header">
+                            <div class="auth-platform-icon bg-blue-trans"><i class="fa-brands fa-google text-blue"></i></div>
+                            <div class="auth-platform-info">
+                                <h3>Google 商家地標</h3>
+                                <span class="auth-status-badge disconnected" id="auth-status-google">未綁定</span>
+                            </div>
+                        </div>
+                        <div class="auth-card-body">
+                            <p class="auth-desc">連結 Google Business Profile，取得商家地標最新評論並直接官方發布回覆。</p>
+                            <div class="connected-info-box" id="auth-info-google" style="display: none;">
+                                <div class="info-row"><span>已綁定地標:</span> <strong id="connected-name-google">美味花園 信義店</strong></div>
+                                <div class="info-row"><span>授權 Token:</span> <code class="masked-token" id="connected-token-google">••••••••</code></div>
+                            </div>
+
+                            <!-- Google OAuth Credentials Panel -->
+                            <div class="credentials-setup-panel" id="google-creds-panel" style="margin-bottom: 12px; display: none;">
+                                <div class="form-group">
+                                    <label class="form-label font-semibold" style="font-size: 11px; margin-bottom: 3px;">Google API Client ID</label>
+                                    <input type="text" id="google-client-id-input" class="form-control form-control-small" placeholder="輸入 12345-abc.apps.googleusercontent.com" style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.08);">
+                                </div>
+                                <div class="form-group margin-top-5">
+                                    <label class="form-label font-semibold" style="font-size: 11px; margin-bottom: 3px;">重新導向 URI (已授權 URI)</label>
+                                    <input type="text" id="google-redirect-uri-display" class="form-control form-control-small font-mono" readonly style="background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.04); color: var(--text-secondary); font-size: 10px;">
+                                </div>
+                                <div style="display:flex; justify-content: flex-end; gap:8px; margin-top:8px;">
+                                    <button class="btn btn-text btn-small" onclick="ResponseHubUI.toggleGoogleCredentialsPanel(false)" style="color:var(--text-secondary);">取消</button>
+                                    <button class="btn btn-secondary btn-small" onclick="ResponseHubUI.saveGoogleCredentials()">儲存憑證</button>
+                                </div>
+                            </div>
+
+                            <div class="auth-card-actions" style="display:flex; gap:10px;">
+                                <button class="btn btn-secondary" id="btn-toggle-google-creds" onclick="ResponseHubUI.toggleGoogleCredentialsPanel(true)" title="設定 API 憑證 Client ID" style="flex: 0 0 45px; padding: 0;"><i class="fa-solid fa-gear"></i></button>
+                                <button class="btn btn-primary" id="btn-auth-google" onclick="ResponseHubUI.startAuth('google')" style="flex: 1;">登入 Google 帳號</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Facebook Page -->
+                    <div class="auth-card card" id="auth-card-facebook">
+                        <div class="auth-card-header">
+                            <div class="auth-platform-icon bg-blue-trans" style="background:rgba(24,119,242,0.12);"><i class="fa-brands fa-facebook-f" style="color:#1877f2;"></i></div>
+                            <div class="auth-platform-info">
+                                <h3>Facebook 粉絲專頁</h3>
+                                <span class="auth-status-badge disconnected" id="auth-status-facebook">未綁定</span>
+                            </div>
+                        </div>
+                        <div class="auth-card-body">
+                            <p class="auth-desc">透過 Facebook Graph API 串接粉專，自動監控貼文留言並透過 AI 產生回覆草稿。</p>
+                            <div class="connected-info-box" id="auth-info-facebook" style="display: none;">
+                                <div class="info-row"><span>已連結粉專:</span> <strong id="connected-name-facebook">美味花園 Gourmet Garden</strong></div>
+                                <div class="info-row"><span>授權 Token:</span> <code class="masked-token" id="connected-token-facebook">••••••••</code></div>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="btn-auth-facebook" onclick="ResponseHubUI.startAuth('facebook')">登入 Facebook 帳號</button>
+                        </div>
+                    </div>
+
+                    <!-- Instagram Account -->
+                    <div class="auth-card card" id="auth-card-instagram">
+                        <div class="auth-card-header">
+                            <div class="auth-platform-icon bg-pink-trans" style="background:rgba(225,48,108,0.12);"><i class="fa-brands fa-instagram" style="color:#e1306c;"></i></div>
+                            <div class="auth-platform-info">
+                                <h3>Instagram 商業帳號</h3>
+                                <span class="auth-status-badge disconnected" id="auth-status-instagram">未綁定</span>
+                            </div>
+                        </div>
+                        <div class="auth-card-body">
+                            <p class="auth-desc">串接 Instagram Graph API，管理貼文及 Reels 留言，AI 自動調整為社群專用語氣。</p>
+                            <div class="connected-info-box" id="auth-info-instagram" style="display: none;">
+                                <div class="info-row"><span>已連結帳號:</span> <strong id="connected-name-instagram">@gourmet_garden_official</strong></div>
+                                <div class="info-row"><span>授權 Token:</span> <code class="masked-token" id="connected-token-instagram">••••••••</code></div>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="btn-auth-instagram" onclick="ResponseHubUI.startAuth('instagram')">登入 Instagram 帳號</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== TAB 8: RESPONSE PENDING ===================== -->
+            <section class="tab-content" id="response-pending-tab">
+                <div class="response-hub-layout">
+                    <!-- Left: Pending List -->
+                    <div class="response-list-panel card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-list-check text-blue"></i> 待處理社群留言</h3>
+                            <div class="list-filters">
+                                <select class="form-control form-control-small" id="pending-platform-filter" onchange="ResponseHubUI.filterPendingList()">
+                                    <option value="all">所有平台</option>
+                                    <option value="google">Google Business</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="instagram">Instagram</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding:0; overflow-y:auto; max-height: 650px;">
+                            <div class="pending-comments-list" id="pending-comments-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Workspace -->
+                    <div class="response-workspace-panel">
+                        <!-- Select Prompt State -->
+                        <div class="card workspace-empty-state" id="workspace-empty-state">
+                            <i class="fa-solid fa-reply-all empty-icon"></i>
+                            <h3>請選擇左側的待回覆留言</h3>
+                            <p>選擇留言後，系統將自動套用對應平台的 RAG 品牌語氣生成回覆草稿。</p>
+                        </div>
+
+                        <!-- Active Generation Workspace -->
+                        <div class="card workspace-active-state" id="workspace-active-state" style="display:none;">
+                            <div class="card-header bg-gradient-blue">
+                                <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI RAG 互動回覆工作區</h3>
+                                <span class="platform-indicator-badge" id="workspace-platform-badge">Facebook</span>
+                            </div>
+                            <div class="card-body">
+                                <!-- Comment Details -->
+                                <div class="workspace-comment-card">
+                                    <div class="comment-author-info">
+                                        <strong id="workspace-comment-author">顧客姓名</strong>
+                                        <span class="comment-time" id="workspace-comment-time">10分鐘前</span>
+                                    </div>
+                                    <p class="comment-text-content" id="workspace-comment-text">這是留言的原始內容...</p>
+                                    <div class="comment-metadata-row">
+                                        <span class="badge" id="workspace-comment-sentiment">正面</span>
+                                        <span class="badge" id="workspace-comment-risk">低風險</span>
+                                    </div>
+                                </div>
+
+                                <div class="workspace-flex-grid">
+                                    <!-- Dynamic Platform Context Info -->
+                                    <div class="info-card">
+                                        <span class="info-label"><i class="fa-solid fa-bullhorn text-blue"></i> 平台特定語氣方針</span>
+                                        <div class="info-value" id="workspace-tone-desc">熱情親切、使用表情符號...</div>
+                                    </div>
+                                    <!-- Token Information -->
+                                    <div class="info-card">
+                                        <span class="info-label"><i class="fa-solid fa-shield-key text-green"></i> 使用授權密鑰</span>
+                                        <div class="info-value"><code id="workspace-token-info">EAAGz•••••••• (AES-256)</code></div>
+                                    </div>
+                                </div>
+
+                                <!-- SOPs retrieved -->
+                                <div class="workspace-sop-box">
+                                    <h4><i class="fa-solid fa-book-open"></i> 檢索匹配之 SOP 原則</h4>
+                                    <div class="workspace-sop-content" id="workspace-sop-rules">
+                                        <!-- SOP Rules list here -->
+                                    </div>
+                                </div>
+
+                                <!-- RAG Hallucination Guard Audit -->
+                                <div class="workspace-rag-audit-box margin-top-15" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 12px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                                        <h4 style="margin:0; font-size:12px; color:var(--text-primary);"><i class="fa-solid fa-shield-halved text-green"></i> RAG 防幻覺安全審計</h4>
+                                        <span class="badge nav-badge-green" style="font-size:10px;"><i class="fa-solid fa-circle-check"></i> 安全護欄已啟用</span>
+                                    </div>
+                                    <div class="rag-audit-comparison" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px;">
+                                        <div style="background: rgba(239, 68, 68, 0.04); border: 1px dashed rgba(239, 68, 68, 0.2); padding: 8px 10px; border-radius: 4px; font-size:11px;">
+                                            <div style="color:var(--color-danger); font-weight:600; margin-bottom:4px;"><i class="fa-solid fa-triangle-exclamation"></i> 傳統未受控 LLM (易有幻覺與賠償風險)</div>
+                                            <div id="workspace-bad-reply" style="color:var(--text-muted); line-height: 1.5; font-style: italic;">檢索中...</div>
+                                        </div>
+                                        <div style="background: rgba(16, 185, 129, 0.04); border: 1px dashed rgba(16, 185, 129, 0.2); padding: 8px 10px; border-radius: 4px; font-size:11px;">
+                                            <div style="color:var(--color-success); font-weight:600; margin-bottom:4px;"><i class="fa-solid fa-circle-check"></i> 限制型 RAG 安全回覆 (符合品牌 SOP)</div>
+                                            <div id="workspace-good-reply" style="color:var(--text-secondary); line-height: 1.5;">檢索中...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Response Input & Generation -->
+                                <div class="form-group margin-top-15">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
+                                        <label class="form-label font-semibold">AI 建議回覆草稿 (可編輯發布)</label>
+                                        <button class="btn btn-text btn-small" onclick="ResponseHubUI.reGenerateReply()"><i class="fa-solid fa-arrows-rotate"></i> 重新生成</button>
+                                    </div>
+                                    <textarea id="workspace-reply-draft" class="form-control" rows="5" placeholder="AI 生成中..."></textarea>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="workspace-actions margin-top-20">
+                                    <button class="btn btn-secondary" onclick="ResponseHubUI.closeWorkspace()"><i class="fa-solid fa-chevron-left"></i> 取消</button>
+                                    <button class="btn btn-primary" id="btn-submit-reply" onclick="ResponseHubUI.submitReply()"><i class="fa-solid fa-paper-plane"></i> 確認發布 (API 呼叫)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== TAB 9: RESPONSE SUBMITTED ===================== -->
+            <section class="tab-content" id="response-submitted-tab">
+                <div class="reviews-table-card card">
+                    <div class="table-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left text-blue"></i> 已發布回覆紀錄</h3>
+                        <div class="table-info">
+                            總共發布：<strong id="submitted-total-count">0</strong> 筆回覆
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="reviews-table">
+                            <thead>
+                                <tr>
+                                    <th>平台 / 時間</th>
+                                    <th>顧客名稱</th>
+                                    <th style="width:30%;">留言內容</th>
+                                    <th style="width:30%;">已發布回覆</th>
+                                    <th>狀態</th>
+                                    <th>動作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submitted-table-body">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-empty" id="submitted-table-empty" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fa-solid fa-paper-plane" style="font-size: 40px; margin-bottom: 15px; color: var(--text-muted);"></i>
+                        <p>尚無已發布的回覆紀錄</p>
+                    </div>
+                </div>
+            </section>
+
         </main>
+
+        <!-- ===================== OAUTH DIALOG MODAL ===================== -->
+        <div class="modal-backdrop" id="oauth-modal" style="display:none;" aria-hidden="true">
+            <div class="modal-card oauth-modal-card" style="max-width: 480px;">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-shield-halved text-blue"></i> 模擬 OAuth2 安全授權</h3>
+                    <button class="close-modal-btn" onclick="ResponseHubUI.closeOauthModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="oauth-modal-body">
+                    <!-- Dynamic OAuth flow -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== API PAYLOAD MODAL ===================== -->
+        <div class="modal-backdrop" id="payload-modal" style="display:none;" aria-hidden="true">
+            <div class="modal-card" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-code text-blue"></i> 檢視 API 傳送與回傳 Payload</h3>
+                    <button class="close-modal-btn" onclick="ResponseHubUI.closePayloadModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label font-semibold">API Request Headers</label>
+                        <pre><code id="payload-req-headers" class="json-code"></code></pre>
+                    </div>
+                    <div class="form-group margin-top-15">
+                        <label class="form-label font-semibold">API Request Body (POST /api/submit-reply)</label>
+                        <pre><code id="payload-req-body" class="json-code"></code></pre>
+                    </div>
+                    <div class="form-group margin-top-15">
+                        <label class="form-label font-semibold">API Response Status</label>
+                        <div id="payload-res-status" style="margin-top:5px; font-weight:bold;"></div>
+                    </div>
+                    <div class="form-group margin-top-15">
+                        <label class="form-label font-semibold">API Response Body (JSON)</label>
+                        <pre><code id="payload-res-body" class="json-code"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ===================== REVIEW DETAIL MODAL ===================== -->

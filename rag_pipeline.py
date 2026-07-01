@@ -1,6 +1,15 @@
 import json
 import re
 import uuid
+import sys
+
+# Prevent UnicodeEncodeError on Windows terminals
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
 
 def load_json_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -37,10 +46,11 @@ def get_store_info(store_name, kb):
             return store
     return None
 
-def build_prompt_with_rag(review, kb):
+def build_prompt_with_rag(review, kb, fanpage_context=None):
     """
     Constructs the prompt by merging RAG retrieved guidelines, store details, and safety parameters.
     Matches the prompt design in Section 9.1 of the design doc.
+    Supports platform-specific tones via fanpage_context.
     """
     raw_text = review["raw_text"]
     store_name = review["store_name"]
@@ -79,13 +89,22 @@ def build_prompt_with_rag(review, kb):
     brand_name = kb["brand_info"]["brand_name"]
     brand_tone = kb["brand_info"]["brand_tone"]
     
+    # Platform context handling
+    platform = fanpage_context.get("platform", "Google 商家地標") if fanpage_context else "Google 商家地標"
+    tone = fanpage_context.get("tone", brand_tone) if fanpage_context else brand_tone
+    length_limit = fanpage_context.get("length_limit", "100字以內") if fanpage_context else "100字以內"
+    custom_instructions = fanpage_context.get("custom_instructions", "") if fanpage_context else ""
+    
     # Constructing System Prompt
-    system_prompt = f"""你是 {brand_name} 的 Google 商家評論回覆助手。你只能產生公開、禮貌、自然、100 字以內的繁體中文回覆。
+    system_prompt = f"""你是 {brand_name} 的社群回覆助手。目標發布平台為：{platform}。
+你只能產生公開、禮貌、自然、{length_limit}的繁體中文回覆。
+你的回覆風格與語氣需符合此粉專設定：{tone}。
+{f'額外發布指令：{custom_instructions}' if custom_instructions else ''}
 你不得承認未確認事實，不得過度承諾，不得與顧客爭辯，不得透露公司內部資訊。
 如果評論涉及食品安全、法律、歧視、個資、媒體、公關危機、暴力威脅或高額補償，必須標記 need_human=true。"""
 
     # Constructing User Prompt
-    user_prompt = f"""請根據以下資料產生 Google 商家回覆草稿。
+    user_prompt = f"""請根據以下資料產生 {platform} 商家回覆草稿。
 品牌名稱: {brand_name}
 品牌風格: {brand_tone}
 門市: {store_name}
@@ -105,7 +124,7 @@ def build_prompt_with_rag(review, kb):
 
 請輸出 JSON 格式，架構如下：
 {{
-  "reply_text": "100 字內公開回覆",
+  "reply_text": "{length_limit}公開回覆",
   "need_human": {need_human},
   "need_customer_service": {need_customer_service},
   "need_legal": {need_legal},
@@ -158,14 +177,17 @@ def simulate_hallucination_reply(review):
             "reason_code": "簡短致謝"
         }
 
-def simulate_rag_constrained_reply(review, sop_rules, store_info):
+def simulate_rag_constrained_reply(review, sop_rules, store_info, fanpage_context=None):
     """
     Simulates the safe, RAG-constrained LLM output adhering strictly to the guidelines.
     No liability admitted, safety flags populated, and redirects to private manager channel.
+    Supports platform-specific tone and style.
     """
     raw_text = review["raw_text"]
     rating = review["rating"]
     store_name = review["store_name"]
+    
+    platform = fanpage_context.get("platform", "Google") if fanpage_context else "Google"
     
     need_human = review["risk"]["level"] in ["high", "critical"]
     risk_flags = []
@@ -180,25 +202,58 @@ def simulate_rag_constrained_reply(review, sop_rules, store_info):
     
     # Rule matching and template selection based on retrieved SOP
     matched_category = sop_rules[0].get("category", "") if sop_rules else "generic"
+    if rating >= 4 and not need_human:
+        matched_category = "general_positive"
     
     if matched_category == "food_safety_issue":
         if "拉肚子" in raw_text or "發燒" in raw_text:
-            reply_text = f"您好，得知此狀況我們極度遺憾與重視。美味花園一向嚴格把關食品安全，我們將立即對此分店啟動食材安全稽核。懇請您撥打{store_name}專線 {phone} 與我們聯繫，我們將由店主管第一時間親自為您協助與處理。謝謝您。"
+            if platform == "Facebook":
+                reply_text = f"您好，得知此狀況我們極度遺憾與重視！🌸 美味花園一向嚴格把關食品安全，我們將立即對此分店啟動食材安全稽核。懇請您私訊提供電話或撥打專線 {phone}，我們將由店主管親自為您處理。謝謝您！✨"
+            elif platform == "Instagram":
+                reply_text = f"得知此狀況我們深表遺憾與重視！😢 我們將立即對分店啟動食材稽核。懇請私訊提供聯絡方式或撥打 {phone}，將由店主管親自為您協助！謝謝！#食品安全"
+            else:
+                reply_text = f"您好，得知此狀況我們極度遺憾與重視。美味花園一向嚴格把關食品安全，我們將立即對此分店啟動食材安全稽核。懇請您撥打{store_name}專線 {phone} 與我們聯繫，我們將由店主管第一時間親自為您協助與處理。謝謝您。"
         else: # e.g. Hair or insects
-            reply_text = f"您好，對於您在用餐時遇到餐點異物，我們感到非常抱歉。美味花園非常重視衛生，將立即加強廚房內控與環境消毒。懇請您撥打{store_name}電話 {phone}，讓分店主管能直接為您處理後續，謝謝您。"
+            if platform == "Facebook":
+                reply_text = f"您好，對於您在用餐時遇到餐點異物，我們感到非常抱歉！😢 美味花園非常重視衛生，已責令廚房加強內控。懇請您私訊提供電話，我們將由主管第一時間為您處理，謝謝您！✨"
+            elif platform == "Instagram":
+                reply_text = f"對於餐點出現異物我們深感抱歉！😢 已加強廚房內控與環境消毒。懇請私訊提供電話，將由主管直接為您處理，謝謝！#環境衛生"
+            else:
+                reply_text = f"您好，對於您在用餐時遇到餐點異物，我們感到非常抱歉。美味花園非常重視衛生，將立即加強廚房內控與環境消毒。懇請您撥打{store_name}電話 {phone}，讓分店主管能直接為您處理後續，謝謝您。"
     elif matched_category == "service_complaint":
-        reply_text = f"您好，很抱歉在{store_name}帶給您不好的用餐體驗。我們非常重視您的反映，會將此情況回報分店經理以加強同仁的服務培訓。若能提供具體用餐時間或細節，歡迎撥打 {phone}，讓我們有改進與補償的機會。"
+        if platform == "Facebook":
+            reply_text = f"您好，很抱歉在{store_name}帶給您不好的用餐體驗！😢 我們非常重視您的反映，會將此情況回報分店經理以加強同仁的服務培訓。若能提供具體用餐細節，歡迎私訊與我們聯繫，謝謝您！🌸"
+        elif platform == "Instagram":
+            reply_text = f"很抱歉在{store_name}帶給您不好體驗！😢 我們已轉達分店經理加強教育訓練。歡迎私訊告知我們細節，讓我們有機會改進，謝謝！#服務優化"
+        else:
+            reply_text = f"您好，很抱歉在{store_name}帶給您不好的用餐體驗。我們非常重視您的反映，會將此情況回報分店經理以加強同仁的服務培訓。若能提供具體用餐時間或細節，歡迎撥打 {phone}，讓我們有改進與補償的機會。"
     elif matched_category == "waiting_time":
-        reply_text = f"您好，抱歉讓您久等了！為提供美味餐點我們均現點現做，人多時出餐較慢，敬請見諒。建議您下次可利用線上預約訂位以減少等候時間，我們會持續改進排隊流程，謝謝您的反映。"
+        if platform == "Facebook":
+            reply_text = f"您好，抱歉讓您久等了！為提供美味餐點我們均現點現做，人多時出餐較慢，敬請見諒。😢 建議您下次可利用線上預約系統提前訂位，以減少等候時間，謝謝您的反映！✨"
+        elif platform == "Instagram":
+            reply_text = f"抱歉讓您久等了！為維持美味餐點均現點現做 😢 建議下次利用線上系統提前預約訂位，以減少等待時間。我們會持續優化流程！✨ #現點現做"
+        else:
+            reply_text = f"您好，抱歉讓您久等了！為提供美味餐點我們均現點現做，人多時出餐較慢，敬請見諒。建議您下次可利用線上預約訂位以減少等候時間，我們會持續改進排隊流程，謝謝您的反映。"
     elif matched_category == "cleanliness_issue":
-        reply_text = f"感謝您的細心反映。針對{store_name}桌椅與地板清潔不全的疏失，我們深感抱歉。已責令現場人員加強每班的環境清理與清潔維護，期盼下次您光臨時能提供更舒適的環境。謝謝！"
+        if platform == "Facebook":
+            reply_text = f"感謝您的細心反映！針對{store_name}桌椅與地板清潔不全的疏失，我們深感抱歉。已責令現場人員加強每班的清潔維護，期盼下次您光臨時能提供更舒適的環境，謝謝您！🌸"
+        elif platform == "Instagram":
+            reply_text = f"感謝細心反映！針對{store_name}清潔不全的疏失我們深感抱歉。😢 已責令現場加強環境清理，期盼下次給您舒適空間，謝謝！#環境清潔"
+        else:
+            reply_text = f"感謝您的細心反映。針對{store_name}桌椅與地板清潔不全的疏失，我們深感抱歉。已責令現場人員加強每班的環境清理與清潔維護，期盼下次您光臨時能提供更舒適的環境。謝謝！"
     else: # Positive fallback
         specialty = store_info["specialty"] if store_info else "招牌餐點"
-        reply_text = f"非常感謝您的五星好評與熱情支持！聽到您滿意我們的餐點和服務，我們深感榮幸。這也是我們全體同仁前進的动力！下次光臨時，也推薦您嘗試我們的「{specialty}」喔！期待再次為您服務。"
+        if platform == "Facebook":
+            reply_text = f"非常感謝您的五星好評與熱情支持！❤️ 聽到您滿意我們的餐點和服務，我們深感榮幸。下次光臨時，也推薦您嘗試我們的「{specialty}」喔！期待再次為您服務！✨"
+        elif platform == "Instagram":
+            reply_text = f"超感謝您的好評與支持！❤️ 小編也極推我們的「{specialty}」喔！期待下次再為您服務！✨ #美食推薦 #好評回饋"
+        else:
+            reply_text = f"非常感謝您的五星好評與熱情支持！聽到您滿意我們的餐點 and 服務，我們深感榮幸。這也是我們全體同仁前進的动力！下次光臨時，也推薦您嘗試我們的「{specialty}」喔！期待再次為您服務。"
         
-    # Ensure word limit (Traditional Chinese characters usually fit under 100 easily)
-    if len(reply_text) > 100:
-        reply_text = reply_text[:97] + "..."
+    # Ensure word limit based on platform
+    limit = 120 if platform == "Facebook" else (80 if platform == "Instagram" else 100)
+    if len(reply_text) > limit:
+        reply_text = reply_text[:limit-3] + "..."
         
     return {
         "reply_text": reply_text,
@@ -224,17 +279,45 @@ def main():
         return
 
     print_separator()
-    print("                Google Review RAG 防幻覺 Pipeline 模擬展示腳本                ")
-    print("      (展示當 LLM 接入與未接入品牌 SOP 知識庫時，所產生的回覆差異，以防止 AI 幻覺)")
+    print("                Google Review & Social RAG 防幻覺 Pipeline 模擬展示腳本                ")
+    print("      (展示當 LLM 接入不同社群平台粉專 Context 時，所產生的特定品牌語氣回覆與安全護欄)")
     print_separator()
 
-    # We will pick three distinct reviews to demonstrate:
-    # 1. Critical Food Safety review (拉肚子, extreme legal & reputation risk)
-    # 2. Medium Service Complaint (翻白眼, bad attitude)
-    # 3. Standard 5-star Positive review
-    demo_indices = [5, 6, 0] # r006 (拉肚子), r007 (翻白眼), r001 (烤雞好吃)
+    # Define mock fanpage contexts for demonstration
+    demo_scenarios = [
+        {
+            "review_idx": 5, # r006 (拉肚子 - 食安問題)
+            "context": {
+                "platform": "Facebook",
+                "tone": "親切、熱情，多使用表情符號，引導留言者私訊聯絡方式",
+                "length_limit": "120字以內",
+                "custom_instructions": "需引導顧客私訊，祝對方順心。"
+            }
+        },
+        {
+            "review_idx": 6, # r007 (翻白眼 - 服務態度)
+            "context": {
+                "platform": "Google Business Profile",
+                "tone": "正式、專業、誠懇，格式清晰",
+                "length_limit": "100字以內",
+                "custom_instructions": "官方立場，向顧客致謝並承諾檢討。"
+            }
+        },
+        {
+            "review_idx": 0, # r001 (烤雞 - 正面稱讚)
+            "context": {
+                "platform": "Instagram",
+                "tone": "簡短、活潑、富感染力，使用 hashtag 如 #美味花園 #好評回饋",
+                "length_limit": "80字以內",
+                "custom_instructions": "多用愛心與閃亮等表情符號，保持社群熱度。"
+            }
+        }
+    ]
     
-    for idx in demo_indices:
+    for scenario in demo_scenarios:
+        idx = scenario["review_idx"]
+        context = scenario["context"]
+        
         review = reviews[idx]
         review_id = review["review_id"]
         reviewer = review["reviewer"]
@@ -242,12 +325,13 @@ def main():
         raw_text = review["raw_text"]
         risk_level = review["risk"]["level"].upper()
         
-        print(f"\n【評論診斷】評論編號：{review_id} | 評論者：{reviewer} | 評分：{rating} 星 | 風險等級：{risk_level}")
-        print(f"【原始內容】: \"{raw_text}\"")
+        print(f"\n【留言診斷】編號：{review_id} | 作者：{reviewer} | 評分：{rating} 星 | 風險等級：{risk_level}")
+        print(f"【目標平台】：{context['platform']} (設定風格：{context['tone']})")
+        print(f"【原始留言】：\"{raw_text}\"")
         print("-" * 50)
         
         # Run RAG Process
-        system_prompt, user_prompt, sop_rules, store_info = build_prompt_with_rag(review, kb)
+        system_prompt, user_prompt, sop_rules, store_info = build_prompt_with_rag(review, kb, fanpage_context=context)
         
         print(">> [RAG 檢索程序] 成功尋找 SOP 規範:")
         for idx_r, rule in enumerate(sop_rules):
@@ -262,12 +346,12 @@ def main():
         print(f"      回覆內容: {bad_reply['reply_text']}")
         print(f"      是否需人工審核: {bad_reply['need_human']} (風險：高風險內容自動發布！)")
         
-        # 2. With RAG constraints (Safe AI)
-        safe_reply = simulate_rag_constrained_reply(review, sop_rules, store_info)
-        print("\n   [O] 限制型 RAG 回覆 (嚴格遵照 SOP、符合字數限制、引導私下解決、標記人工審核)：")
+        # 2. With RAG constraints (Safe AI + Platform Context)
+        safe_reply = simulate_rag_constrained_reply(review, sop_rules, store_info, fanpage_context=context)
+        print(f"\n   [O] 限制型 RAG 回覆 (適配 {context['platform']} 語氣，嚴守 SOP、字數 {context['length_limit']})：")
         print(f"      回覆內容: {safe_reply['reply_text']}")
         print(f"      欄位輸出驗證：")
-        print(f"      - need_human: {safe_reply['need_human']} (安全：高風險已成功攔截！)")
+        print(f"      - need_human: {safe_reply['need_human']} (安全：高風險已成功防護！)")
         print(f"      - need_apology: {safe_reply['need_apology']}")
         print(f"      - risk_flags: {safe_reply['risk_flags']}")
         print(f"      - reason_code: {safe_reply['reason_code']}")

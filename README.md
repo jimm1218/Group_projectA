@@ -64,11 +64,51 @@ Source Connectors
 目前 prototype 使用：
 
 ```js
-SUPABASE_URL = ""
+SUPABASE_URL = "https://mzonkpfagqdhaqwybtuo.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_Yiq2xPuzCm092Hq8HEv-Gg_yuO5eUCw"
 SUPABASE_REVIEW_TABLE = "review"
 ```
 
 前端使用的是 `app.js` 中設定的 Supabase publishable key。請不要把 Supabase `service_role` secret 放進前端程式碼。
+
+目前串接流程：
+
+1. 從 `public.review` 讀取資料。
+2. 依序嘗試用 `published_at`、`review_time`、`crawled_at`、`created_at`、`id` 排序。
+3. 一次最多讀取 500 筆。
+4. 將 Supabase row 轉成系統內部 Mention / Review 格式。
+5. 若讀不到資料，系統會回退到本地示範資料，並在瀏覽器 console 顯示診斷資訊。
+
+支援的常見欄位名稱：
+
+```text
+內容：content, raw_text, review_text, text, comment, body, message
+作者：author, reviewer, user_name, username, name, display_name
+時間：published_at, review_time, created_at, crawled_at, updated_at
+評分：rating, stars, score, star_rating
+來源：platform, source, source_label, channel, review_type
+店名：store_name, business_name, location_name, branch_name
+```
+
+如果 Supabase Studio 查得到資料，例如：
+
+```sql
+select count(*) from public.review;
+```
+
+但前端讀到 `[]`，通常是 RLS policy 沒讓 `anon` 角色讀取。Demo 可用下列 policy 驗證：
+
+```sql
+alter table public.review enable row level security;
+
+create policy "Allow anon read review"
+on public.review
+for select
+to anon
+using (true);
+```
+
+正式環境請改成依 tenant、登入使用者或 `client_id` 限制資料可見範圍。
 
 ## Reply Capability Layer
 
@@ -162,6 +202,24 @@ python -m http.server 8000 --bind 127.0.0.1
 ```text
 http://127.0.0.1:8000/index.html
 ```
+
+## Gemini API 預覽模式
+
+若要讓「待處理回覆」在本地 RAG 草稿後呼叫 Gemini 產生更自然的回覆，請改用 Node 預覽伺服器。API key 只會留在本機後端，不會送到瀏覽器。
+
+```powershell
+$env:GEMINI_API_KEY="your_key_here"
+$env:GEMINI_MODEL="gemini-2.0-flash"
+node gemini_server.js
+```
+
+開啟：
+
+```text
+http://localhost:8001
+```
+
+若沒有設定 `GEMINI_API_KEY`，或 Gemini 呼叫失敗，畫面會保留原本的本地 RAG 草稿。
 
 ## 驗證方式
 
